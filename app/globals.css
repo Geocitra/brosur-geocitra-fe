@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
+@theme {
+  /* Menyambungkan variabel warna dinamis dari layout.tsx ke Tailwind */
+  --color-primary: var(--primary-color);
+
+  /* Menimpa font bawaan Tailwind dengan Plus Jakarta Sans */
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* 1. Fluid Typography System (Otomatis menyesuaikan ukuran layar) */
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;;
+  /* Judul Hero: Minimal 2.5rem di HP, Maksimal 4.5rem di Desktop */
+  --fluid-h1: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+
+  /* Judul Section: Minimal 2rem di HP, Maksimal 3.5rem di Desktop */
+  --fluid-h2: clamp(2rem, 4vw + 1rem, 3.5rem);
+
+  /* Teks Paragraf: Enak dibaca di semua layar */
+  --fluid-p: clamp(1rem, 1.2vw + 0.5rem, 1.125rem);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* 2. Base Styling */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #ffffff;
+  color: #0f172a;
+  /* Slate 900 */
+}
+
+/* Custom Selection Highlight (Saat user nge-blok teks, warnanya ikut tema aplikasi) */
+::selection {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* 3. Enterprise Container
+   Mengunci lebar maksimal agar desain tetap elegan di monitor raksasa 
+*/
+.enterprise-container {
+  width: 100%;
+  max-width: 1280px;
+  /* Ukuran ideal layar laptop/desktop premium */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  /* Padding aman untuk mobile */
+  padding-right: 1.5rem;
+}
+
+/* 4. Glassmorphism Utility (Buat efek embun/kaca di Navbar nanti) */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
