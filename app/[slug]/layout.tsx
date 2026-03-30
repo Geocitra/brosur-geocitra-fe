@@ -1,5 +1,6 @@
 import { api } from '@/app/lib/axios';
 import { ReactNode } from 'react';
+import AuraBackground from '@/app/components/ui/AuraBackground';
 
 // Fungsi fetcher khusus untuk metadata dan layout
 async function getShowcaseTheme(slug: string) {
@@ -7,7 +8,7 @@ async function getShowcaseTheme(slug: string) {
         const response = await api.get(`/showcase/${slug}`);
         return response.data.primaryColor;
     } catch (error) {
-        return '#1e293b'; // Fallback ke warna Slate-800 jika API gagal/data tidak ada
+        return '#1e293b'; // Fallback ke warna Slate-800 jika API gagal
     }
 }
 
@@ -29,7 +30,11 @@ export default async function ShowcaseLayout({
     } as React.CSSProperties;
 
     return (
-        <div style={themeVariables} className="w-full min-h-screen font-sans selection:bg-primary selection:text-white">
+        <div style={themeVariables} className="relative w-full min-h-screen font-sans selection:bg-primary selection:text-white flex flex-col">
+            {/* The Design Soul: Latar belakang dinamis melayang */}
+            <AuraBackground />
+
+            {/* Konten Utama Aplikasi */}
             {children}
         </div>
     );
