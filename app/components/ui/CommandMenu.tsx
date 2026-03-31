@@ -3,7 +3,7 @@
 import { useEffect, Dispatch, SetStateAction } from 'react';
 import { Command } from 'cmdk';
 import { useRouter } from 'next/navigation';
-import { Search, FileText, AppWindow, X, Wallet, BookOpen, Smartphone } from 'lucide-react';
+import { Search, FileText, X, Wallet, BookOpen, Smartphone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CommandMenu({
@@ -11,12 +11,11 @@ export default function CommandMenu({
     setIsOpen
 }: {
     isOpen: boolean;
-    // [FIX] Menggunakan tipe bawaan React untuk state setter agar mendukung callback state
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }) {
     const router = useRouter();
 
-    // Memantau kombinasi tombol Cmd+K (Mac) atau Ctrl+K (Windows)
+    // Keyboard Shortcut Logic
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
             if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -28,7 +27,6 @@ export default function CommandMenu({
         return () => document.removeEventListener('keydown', down);
     }, [setIsOpen]);
 
-    // Fungsi routing Client-side yang super cepat
     const runCommand = (command: () => void) => {
         setIsOpen(false);
         command();
@@ -37,8 +35,7 @@ export default function CommandMenu({
     return (
         <AnimatePresence>
             {isOpen && (
-                // [FIX] Mengubah z-[100] menjadi z-100 sesuai rekomendasi Tailwind v4
-                <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4">
+                <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4 pointer-events-none">
 
                     {/* Backdrop Blur */}
                     <motion.div
@@ -46,7 +43,7 @@ export default function CommandMenu({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setIsOpen(false)}
-                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
+                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-auto"
                     />
 
                     {/* Modal Command Palette */}
@@ -55,12 +52,13 @@ export default function CommandMenu({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -20 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="relative z-50 w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10"
+                        className="relative z-50 w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10 pointer-events-auto"
                     >
                         <Command className="flex w-full flex-col bg-transparent">
                             {/* Input Area */}
                             <div className="flex items-center border-b border-slate-100 px-4">
-                                <Search className="mr-3 h-5 w-5 text-primary" />
+                                {/* [FIX] Search Icon - Sadar Warna */}
+                                <Search className="mr-3 h-5 w-5" style={{ color: 'var(--primary-color)' }} />
                                 <Command.Input
                                     autoFocus
                                     placeholder="Cari brosur aplikasi (Contoh: Vely, Litera...)"
@@ -75,8 +73,7 @@ export default function CommandMenu({
                             </div>
 
                             {/* List Area */}
-                            {/* [FIX] Mengubah max-h-[350px] menjadi max-h-87.5 sesuai rekomendasi Tailwind v4 */}
-                            <Command.List className="max-h-87.5 overflow-y-auto overflow-x-hidden p-3">
+                            <Command.List className="max-h-87.5 overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
                                 <Command.Empty className="py-12 text-center text-slate-500">
                                     <p className="font-medium text-lg">Brosur tidak ditemukan.</p>
                                     <p className="text-sm mt-1">Coba gunakan kata kunci lain.</p>
@@ -84,38 +81,30 @@ export default function CommandMenu({
 
                                 {/* Histori / Prioritas */}
                                 <Command.Group heading="Terakhir Dilihat" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                    <Command.Item
+                                    <CommandItem
                                         onSelect={() => runCommand(() => router.push('/edaily'))}
-                                        className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary transition-colors text-slate-700 font-bold"
-                                    >
-                                        <FileText className="mr-3 h-5 w-5 text-slate-400 data-[selected=true]:text-primary" />
-                                        E-Daily Report
-                                    </Command.Item>
+                                        icon={<FileText size={20} />}
+                                        label="E-Daily Report"
+                                    />
                                 </Command.Group>
 
                                 {/* Ekosistem Aplikasi Lainnya */}
                                 <Command.Group heading="Katalog Geocitra" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                    <Command.Item
+                                    <CommandItem
                                         onSelect={() => runCommand(() => router.push('/keuanganku'))}
-                                        className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary transition-colors text-slate-700 font-bold"
-                                    >
-                                        <Wallet className="mr-3 h-5 w-5 text-slate-400 data-[selected=true]:text-primary" />
-                                        KeuanganKu (SaaS Agen)
-                                    </Command.Item>
-                                    <Command.Item
+                                        icon={<Wallet size={20} />}
+                                        label="KeuanganKu (SaaS Agen)"
+                                    />
+                                    <CommandItem
                                         onSelect={() => runCommand(() => router.push('/litera'))}
-                                        className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary transition-colors text-slate-700 font-bold"
-                                    >
-                                        <BookOpen className="mr-3 h-5 w-5 text-slate-400 data-[selected=true]:text-primary" />
-                                        Litera Dashboard
-                                    </Command.Item>
-                                    <Command.Item
+                                        icon={<BookOpen size={20} />}
+                                        label="Litera Dashboard"
+                                    />
+                                    <CommandItem
                                         onSelect={() => runCommand(() => router.push('/vely'))}
-                                        className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary transition-colors text-slate-700 font-bold"
-                                    >
-                                        <Smartphone className="mr-3 h-5 w-5 text-slate-400 data-[selected=true]:text-primary" />
-                                        Vely App
-                                    </Command.Item>
+                                        icon={<Smartphone size={20} />}
+                                        label="Vely App"
+                                    />
                                 </Command.Group>
                             </Command.List>
                         </Command>
@@ -123,5 +112,24 @@ export default function CommandMenu({
                 </div>
             )}
         </AnimatePresence>
+    );
+}
+
+/**
+ * Sub-komponen untuk menangani Logika Warna saat Seleksi (Hover/Keyboard)
+ */
+function CommandItem({ onSelect, icon, label }: { onSelect: () => void, icon: React.ReactNode, label: string }) {
+    return (
+        <Command.Item
+            onSelect={onSelect}
+            // Menggunakan CSS Variables untuk menangani warna dinamis saat data-selected="true"
+            className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 text-slate-700 font-bold transition-colors
+                       aria-selected:bg-(--primary-color)/8 aria-selected:text-(--primary-color) group"
+        >
+            <div className="mr-3 transition-colors group-aria-selected:text-(--primary-color) text-slate-400">
+                {icon}
+            </div>
+            {label}
+        </Command.Item>
     );
 }

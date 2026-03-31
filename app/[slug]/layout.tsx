@@ -30,12 +30,12 @@ export default async function ShowcaseLayout({
     } as React.CSSProperties;
 
     return (
-        <div style={themeVariables} className="relative w-full min-h-screen font-sans selection:bg-primary selection:text-white flex flex-col">
-            {/* The Design Soul: Latar belakang dinamis melayang */}
+        // Pindahkan style ke pembungkus paling luar agar semua anak (termasuk Aura) bisa baca
+        <div style={themeVariables} className="relative w-full min-h-screen">
             <AuraBackground />
-
-            {/* Konten Utama Aplikasi */}
-            {children}
+            <main className="relative z-10">
+                {children}
+            </main>
         </div>
     );
 }

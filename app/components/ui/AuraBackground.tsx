@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function AuraBackground() {
     return (
-        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 bg-slate-50">
+        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10 bg-transparent">
 
             {/* 1. NOISE TEXTURE LAYER (The Secret Sauce)
         Memberikan tekstur "Film Grain" agar background tidak terlihat seperti website murah.

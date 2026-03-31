@@ -1,12 +1,13 @@
 import { api } from '@/app/lib/axios';
 import BentoGrid from './components/BentoGrid';
 import AuraBackground from './components/ui/AuraBackground';
+import HeroContent from './components/layout/HeroContent';
+import ProductCarousel from './components/ui/ProductCarousel';
+import Image from 'next/image';
 
-// Menarik daftar semua brosur dari BE
 async function getShowcases() {
   try {
     const response = await api.get('/showcase');
-    // Asumsi BE mengembalikan array di response.data atau response.data.data
     return response.data?.data || response.data || [];
   } catch (error) {
     console.error('Gagal mengambil data katalog brosur:', error);
@@ -16,44 +17,77 @@ async function getShowcases() {
 
 export default async function CatalogPage() {
   const items = await getShowcases();
+  const corporateBlue = '#0ea5e9';
 
   return (
-    <main className="relative min-h-screen bg-slate-50 overflow-hidden font-sans">
+    <main
+      className="relative min-h-screen bg-[#f8fafc] overflow-hidden flex flex-col"
+      style={{ '--primary-color': corporateBlue } as React.CSSProperties}
+    >
+      {/* 1. SOLID DARK HERO */}
+      <section className="relative w-full bg-slate-950 pt-16 pb-24 md:pt-24 md:pb-32 border-b-4 border-[var(--primary-color)]">
+        <div className="enterprise-container relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <HeroContent />
+            <div className="hidden lg:block">
+              <ProductCarousel items={items} />
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Aura Global Katalog:
-        Karena halaman utama bukan milik spesifik satu aplikasi,
-        kita set warna Aura ke Biru Korporat Geocitra (#0ea5e9) 
-      */}
-      <div style={{ '--primary-color': '#0ea5e9' } as React.CSSProperties}>
-        <AuraBackground />
+      {/* 2. CATALOG AREA */}
+      <div id="catalog-grid" className="relative grow scroll-mt-20">
+        <div className="opacity-20"><AuraBackground /></div>
+        <div className="enterprise-container relative z-10 pt-20 pb-32 px-2">
+          <BentoGrid items={items} />
+        </div>
       </div>
 
-      <div className="enterprise-container relative z-10 pt-24 md:pt-32 pb-24">
+      {/* 3. SOLID TERMINAL FOOTER (Clean & Monochrome) */}
+      <footer className="w-full bg-slate-950 pt-24 pb-12 relative z-20 border-t border-slate-900">
+        <div className="enterprise-container flex flex-col md:flex-row justify-between items-start gap-16">
 
-        {/* The Grand Header */}
-        <div className="max-w-4xl mb-16 md:mb-24">
-          <span className="inline-block py-2 px-5 rounded-full bg-white/80 backdrop-blur-md shadow-sm text-slate-600 font-extrabold text-sm tracking-widest mb-8 border border-white uppercase">
-            Geocitra Showcase Portal
-          </span>
-          <h1 className="text-[--fluid-h1] font-extrabold tracking-tight leading-[1.05] mb-8">
-            Solusi Digital <br />
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-teal-400">
-              Terintegrasi.
-            </span>
-          </h1>
-          <p className="text-[--fluid-p] leading-relaxed max-w-2xl font-medium">
-            Jelajahi ekosistem perangkat lunak kami. Pilih aplikasi yang sesuai dengan kebutuhan instansi Anda, dan pelajari spesifikasi serta arsitektur teknisnya melalui brosur interaktif.
-          </p>
+          <div className="flex flex-col items-center md:items-start gap-8">
+            {/* [FIX LOGO FOOTER] Tanpa BG Putih, Monokrom via CSS Filter */}
+            <div className="relative group">
+              <Image
+                src="/logogeocitra.png"
+                alt="Geocitra Logo Footer"
+                width={220}
+                height={55}
+                style={{
+                  height: 'auto',
+                  width: 'auto',
+                  filter: 'grayscale(1) brightness(0) invert(1)' // TRIK MAGIC: Ubah logo warna jadi putih bersih
+                }}
+                className="object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+              />
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          <div className="grid grid-cols-2 gap-12 sm:gap-20">
+            <div className="flex flex-col gap-4">
+              <span className="text-[var(--primary-color)] font-black text-[10px] uppercase tracking-widest">Resources</span>
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm font-bold">Documentation</a>
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm font-bold">Architecture</a>
+            </div>
+            <div className="flex flex-col gap-4">
+              <span className="text-[var(--primary-color)] font-black text-[10px] uppercase tracking-widest">Legal</span>
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm font-bold">Privacy Policy</a>
+              <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm font-bold">Terms of Service</a>
+            </div>
+          </div>
         </div>
 
-        {/* The Asymmetric Grid Engine */}
-        <BentoGrid items={items} />
-
-      </div>
-
-      {/* Simple Footer khusus halaman utama */}
-      <footer className="relative z-10 w-full py-12 text-center border-t border-slate-200/50 bg-white/50 backdrop-blur-sm mt-12">
-        <p className="text-slate-400 font-bold text-sm tracking-wide">© {new Date().getFullYear()} CV Geocitra. All Rights Reserved.</p>
+        {/* Bottom Bar */}
+        <div className="enterprise-container mt-24 pt-8 border-t border-slate-900/50 flex justify-between items-center">
+          <p className="text-slate-600 font-bold text-[10px] uppercase tracking-[0.4em]">
+            © {new Date().getFullYear()} CV Geocitra. All Rights Reserved.
+          </p>
+          <div className="w-2 h-2 rounded-full bg-[var(--primary-color)] animate-pulse" />
+        </div>
       </footer>
     </main>
   );

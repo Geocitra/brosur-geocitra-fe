@@ -13,15 +13,25 @@ export default function Navbar({ appName }: { appName: string }) {
             <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
 
                 {/* Navbar Pill */}
-                <nav className="glass-panel w-full max-w-3xl rounded-full px-4 py-3 flex items-center justify-between shadow-aura pointer-events-auto">
+                <nav className="glass-panel w-full max-w-3xl rounded-full px-4 py-3 flex items-center justify-between shadow-aura pointer-events-auto border border-white/50">
 
                     {/* Brand & Identity Area */}
                     <div className="flex items-center gap-3 pl-2">
                         <span className="font-extrabold text-xl tracking-tighter text-slate-900">
                             GEOCITRA
                         </span>
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        <span className="hidden sm:inline-block text-sm font-bold text-primary truncate max-w-37.5">
+
+                        {/* [FIX] Dot Separator - Sadar Warna */}
+                        <div
+                            className="w-1.5 h-1.5 rounded-full"
+                            style={{ backgroundColor: 'var(--primary-color)' }}
+                        />
+
+                        {/* [FIX] App Name - Sadar Warna */}
+                        <span
+                            className="hidden sm:inline-block text-sm font-bold truncate max-w-37.5"
+                            style={{ color: 'var(--primary-color)' }}
+                        >
                             {appName}
                         </span>
                     </div>
@@ -31,13 +41,20 @@ export default function Navbar({ appName }: { appName: string }) {
                         onClick={() => setIsCommandOpen(true)}
                         className="flex items-center gap-3 px-4 py-2 bg-slate-100/50 hover:bg-slate-100 border border-slate-200/50 rounded-full transition-all group"
                     >
-                        <Search size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+                        {/* [FIX] Search Icon Hover - Sadar Warna */}
+                        <Search
+                            size={16}
+                            className="text-slate-400 transition-colors group-hover:text-(--primary-color)"
+                            style={{ '--tw-text-opacity': '1' } as React.CSSProperties} // Memastikan tailwind v4 class mapping
+                        />
+
                         <span className="text-sm font-medium text-slate-500 hidden sm:inline-block">
                             Cari brosur...
                         </span>
+
                         <div className="hidden lg:flex items-center gap-1 ml-4">
-                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400">⌘</kbd>
-                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400">K</kbd>
+                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400 shadow-xs">⌘</kbd>
+                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400 shadow-xs">K</kbd>
                         </div>
                     </button>
 

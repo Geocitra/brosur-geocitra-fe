@@ -1,33 +1,38 @@
+import React from 'react';
 import HeroBlock from './blocks/HeroBlock';
 import FeaturesBlock from './blocks/FeaturesBlock';
 import DownloadBlock from './blocks/DownloadBlock';
-import VideoBlock from './blocks/VideoBlock';
 import FaqBlock from './blocks/FaqBlock';
+import VideoBlock from './blocks/VideoBlock';
+
+// Peta Komponen: Menghubungkan string 'type' dari JSON ke Komponen React
+const blockComponents: { [key: string]: React.ElementType } = {
+    HeroBlock: HeroBlock,
+    FeaturesBlock: FeaturesBlock,
+    DownloadBlock: DownloadBlock,
+    FaqBlock: FaqBlock,
+    VideoBlock: VideoBlock,
+};
 
 export default function BlockRenderer({ blocks }: { blocks: any[] }) {
-    // 1. Sortir blocks secara ASC berdasarkan field 'order' dari database
-    const sortedBlocks = [...blocks].sort((a, b) => a.order - b.order);
+    if (!blocks || blocks.length === 0) {
+        return null;
+    }
 
-    // 2. Mesin Switch-Case Render
     return (
-        <div className="w-full flex flex-col">
-            {sortedBlocks.map((block, index) => {
-                switch (block.type) {
-                    case 'HERO_BLOCK':
-                        return <HeroBlock key={index} data={block.data} />;
-                    case 'FEATURE_BLOCK':
-                        return <FeaturesBlock key={index} data={block.data} />;
-                    case 'DOWNLOAD_BLOCK':
-                        return <DownloadBlock key={index} data={block.data} />;
-                    case 'VIDEO_BLOCK':
-                        return <VideoBlock key={index} data={block.data} />;
-                    case 'FAQ_BLOCK': // <-- Tambahkan ini
-                        return <FaqBlock key={index} data={block.data} />;
-                    default:
-                        // Logika fallback analis: Jika admin masukin tipe blok aneh di DB, abaikan secara silent di UI
-                        console.warn(`[Block Factory] Block type [${block.type}] tidak dipetakan.`);
-                        return null;
+        // flex-col tanpa batasan lebar, karena setiap blok mengatur lebarnya sendiri 
+        // menggunakan utilitas .enterprise-container
+        <div className="flex flex-col w-full overflow-hidden">
+            {blocks.map((block, index) => {
+                const Component = blockComponents[block.type];
+
+                if (!Component) {
+                    console.warn(`[Block Factory] Block type [${block.type}] tidak dipetakan.`);
+                    return null;
                 }
+
+                // Me-render komponen secara dinamis dan mengirimkan data JSON ke dalamnya
+                return <Component key={`${block.type}-${index}`} data={block.data} />;
             })}
         </div>
     );

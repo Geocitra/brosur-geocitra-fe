@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
-// Konfigurasi Font Enterprise
+// Konfigurasi Font Enterprise - Menggunakan Plus Jakarta Sans agar terlihat modern
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-plus-jakarta', // Daftarkan sebagai CSS Variable
+  variable: '--font-plus-jakarta',
   display: 'swap',
 });
 
@@ -20,13 +20,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // 'scroll-smooth' adalah trik CSS native agar ketika user klik link jangkar, 
-    // halamannya meluncur mulus, nggak patah-patah.
-    <html lang="id" className="scroll-smooth">
+    /** * [FIX LOG] Menambahkan 'data-scroll-behavior="smooth"' 
+     * Ini untuk membungkam warning Next.js dan memastikan transisi antar rute tetap stabil
+     */
+    <html lang="id" className="scroll-smooth" data-scroll-behavior="smooth">
       <body
-        className={`${plusJakartaSans.variable} font-sans antialiased text-slate-900 bg-white`}
+        className={`${plusJakartaSans.variable} font-sans antialiased text-slate-900 bg-slate-50`}
       >
-        {children}
+        {/* Container Utama: 
+            Gue kasih min-h-screen dan flex-col supaya footer selalu nempel di bawah
+            walaupun kontennya sedikit.
+        */}
+        <div className="flex flex-col min-h-screen overflow-x-hidden">
+          {children}
+        </div>
       </body>
     </html>
   );
