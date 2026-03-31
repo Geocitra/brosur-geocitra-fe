@@ -30,6 +30,8 @@ const variants = {
 };
 
 export default function ProductCarousel({ items }: { items: any[] }) {
+    if (!items || items.length === 0) return null;
+
     const [[page, direction], setPage] = useState([0, 0]);
     const imageIndex = Math.abs(page % items.length);
 
