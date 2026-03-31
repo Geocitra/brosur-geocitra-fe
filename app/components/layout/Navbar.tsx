@@ -1,7 +1,7 @@
 'use client';
-
+// Navbar.tsx
+import { Search, ArrowLeft, LayoutDashboard } from 'lucide-react'; // Tambah icon
 import { useState } from 'react';
-import { Search } from 'lucide-react';
 import CommandMenu from '../ui/CommandMenu';
 
 export default function Navbar({ appName }: { appName: string }) {
@@ -9,59 +9,63 @@ export default function Navbar({ appName }: { appName: string }) {
 
     return (
         <>
-            {/* Dynamic Pill Container */}
             <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+                {/* 
+                   UBAH: Dari glass-panel (transparan) ke bg-white (solid) 
+                   Hapus: border-white/50, ganti ke border-slate-200
+                */}
+                <nav className="bg-white w-full max-w-3xl rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg shadow-slate-200/50 pointer-events-auto border border-slate-200">
 
-                {/* Navbar Pill */}
-                <nav className="glass-panel w-full max-w-3xl rounded-full px-4 py-3 flex items-center justify-between shadow-aura pointer-events-auto border border-white/50">
+                    {/* Area Kiri: Back Button & Brand */}
+                    <div className="flex items-center gap-2 pl-1">
+                        {/* Tombol Back ke Dashboard Utama */}
+                        <a
+                            href="https://brosur.geocitra.com" // Sesuaikan URL Dashboard Anda
+                            className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-900 transition-colors group"
+                            title="Kembali ke Dashboard"
+                        >
+                            <ArrowLeft size={19} className="group-hover:-translate-x-0.5 transition-transform" />
+                        </a>
 
-                    {/* Brand & Identity Area */}
-                    <div className="flex items-center gap-3 pl-2">
-                        <span className="font-extrabold text-xl tracking-tighter text-slate-900">
+                        {/* Divider Kecil */}
+                        <div className="w-px h-6 bg-slate-200 mx-1" />
+
+                        <span className="font-extrabold text-xl tracking-tighter text-slate-900 ml-1">
                             GEOCITRA
                         </span>
 
-                        {/* [FIX] Dot Separator - Sadar Warna */}
                         <div
                             className="w-1.5 h-1.5 rounded-full"
                             style={{ backgroundColor: 'var(--primary-color)' }}
                         />
 
-                        {/* [FIX] App Name - Sadar Warna */}
                         <span
-                            className="hidden sm:inline-block text-sm font-bold truncate max-w-37.5"
+                            className="hidden sm:inline-block text-sm font-bold text-slate-500"
                             style={{ color: 'var(--primary-color)' }}
                         >
                             {appName}
                         </span>
                     </div>
 
-                    {/* Spotlight Search Trigger */}
+                    {/* Spotlight Search (Dibuat lebih solid) */}
                     <button
                         onClick={() => setIsCommandOpen(true)}
-                        className="flex items-center gap-3 px-4 py-2 bg-slate-100/50 hover:bg-slate-100 border border-slate-200/50 rounded-full transition-all group"
+                        className="flex items-center gap-3 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full transition-all group"
                     >
-                        {/* [FIX] Search Icon Hover - Sadar Warna */}
                         <Search
                             size={16}
-                            className="text-slate-400 transition-colors group-hover:text-(--primary-color)"
-                            style={{ '--tw-text-opacity': '1' } as React.CSSProperties} // Memastikan tailwind v4 class mapping
+                            className="text-slate-400 group-hover:text-slate-900"
                         />
-
                         <span className="text-sm font-medium text-slate-500 hidden sm:inline-block">
-                            Cari brosur...
+                            Cari...
                         </span>
-
-                        <div className="hidden lg:flex items-center gap-1 ml-4">
-                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400 shadow-xs">⌘</kbd>
-                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400 shadow-xs">K</kbd>
+                        <div className="hidden lg:flex items-center gap-1 ml-2">
+                            <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400">⌘K</kbd>
                         </div>
                     </button>
-
                 </nav>
             </div>
 
-            {/* Render Command Modal */}
             <CommandMenu isOpen={isCommandOpen} setIsOpen={setIsCommandOpen} />
         </>
     );

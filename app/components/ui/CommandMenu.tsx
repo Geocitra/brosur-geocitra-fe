@@ -3,7 +3,7 @@
 import { useEffect, Dispatch, SetStateAction } from 'react';
 import { Command } from 'cmdk';
 import { useRouter } from 'next/navigation';
-import { Search, FileText, X, Wallet, BookOpen, Smartphone } from 'lucide-react';
+import { Search, FileText, X, Wallet, BookOpen, Smartphone, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CommandMenu({
@@ -104,6 +104,15 @@ export default function CommandMenu({
                                         onSelect={() => runCommand(() => router.push('/vely'))}
                                         icon={<Smartphone size={20} />}
                                         label="Vely App"
+                                    />
+                                </Command.Group>
+
+                                {/* GRUP BARU: Navigasi Global */}
+                                <Command.Group heading="Navigasi" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                    <CommandItem
+                                        onSelect={() => window.location.href = 'https://brosur.geocitra.com'}
+                                        icon={<LayoutDashboard size={20} />}
+                                        label="Kembali ke Dashboard Utama"
                                     />
                                 </Command.Group>
                             </Command.List>
