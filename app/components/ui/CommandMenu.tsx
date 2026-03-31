@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, Dispatch, SetStateAction } from 'react';
+import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { Command } from 'cmdk';
 import { useRouter } from 'next/navigation';
-import { Search, FileText, X, Wallet, BookOpen, Smartphone, LayoutDashboard } from 'lucide-react';
+import { Search, X, LayoutDashboard, Box, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { api } from '@/app/lib/axios';
 
 export default function CommandMenu({
     isOpen,
@@ -14,6 +15,31 @@ export default function CommandMenu({
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }) {
     const router = useRouter();
+    const [products, setProducts] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // [INTELLIGENCE INJECTION] Fetch data & Manipulasi Sorting
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await api.get('/showcase');
+                const rawData = response.data?.data || response.data;
+
+                // Eksekusi Sorting Ascending (A-Z) berdasarkan nama produk
+                const sortedData = [...rawData].sort((a, b) =>
+                    a.name.localeCompare(b.name)
+                );
+
+                setProducts(sortedData);
+            } catch (error) {
+                console.error('[CommandMenu] Gagal mengambil data katalog:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     // Keyboard Shortcut Logic
     useEffect(() => {
@@ -35,7 +61,7 @@ export default function CommandMenu({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4 pointer-events-none">
+                <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4 pointer-events-none">
 
                     {/* Backdrop Blur */}
                     <motion.div
@@ -57,11 +83,10 @@ export default function CommandMenu({
                         <Command className="flex w-full flex-col bg-transparent">
                             {/* Input Area */}
                             <div className="flex items-center border-b border-slate-100 px-4">
-                                {/* [FIX] Search Icon - Sadar Warna */}
-                                <Search className="mr-3 h-5 w-5" style={{ color: 'var(--primary-color)' }} />
+                                <Search className="mr-3 h-5 w-5 text-slate-400" />
                                 <Command.Input
                                     autoFocus
-                                    placeholder="Cari brosur aplikasi (Contoh: Vely, Litera...)"
+                                    placeholder="Cari brosur aplikasi (Contoh: Pam Jaya, Litera...)"
                                     className="flex h-16 w-full bg-transparent outline-none placeholder:text-slate-400 text-slate-900 font-medium text-lg"
                                 />
                                 <button
@@ -73,41 +98,36 @@ export default function CommandMenu({
                             </div>
 
                             {/* List Area */}
-                            <Command.List className="max-h-87.5 overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
+                            <Command.List className="max-h-[350px] overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
                                 <Command.Empty className="py-12 text-center text-slate-500">
                                     <p className="font-medium text-lg">Brosur tidak ditemukan.</p>
                                     <p className="text-sm mt-1">Coba gunakan kata kunci lain.</p>
                                 </Command.Empty>
 
-                                {/* Histori / Prioritas */}
-                                <Command.Group heading="Terakhir Dilihat" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                    <CommandItem
-                                        onSelect={() => runCommand(() => router.push('/edaily'))}
-                                        icon={<FileText size={20} />}
-                                        label="E-Daily Report"
-                                    />
-                                </Command.Group>
-
-                                {/* Ekosistem Aplikasi Lainnya */}
+                                {/* Ekosistem Aplikasi Dinamis (Sorted ASC) */}
                                 <Command.Group heading="Katalog Geocitra" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                    <CommandItem
-                                        onSelect={() => runCommand(() => router.push('/keuanganku'))}
-                                        icon={<Wallet size={20} />}
-                                        label="KeuanganKu (SaaS Agen)"
-                                    />
-                                    <CommandItem
-                                        onSelect={() => runCommand(() => router.push('/litera'))}
-                                        icon={<BookOpen size={20} />}
-                                        label="Litera Dashboard"
-                                    />
-                                    <CommandItem
-                                        onSelect={() => runCommand(() => router.push('/vely'))}
-                                        icon={<Smartphone size={20} />}
-                                        label="Vely App"
-                                    />
+                                    {isLoading ? (
+                                        <div className="flex justify-center items-center py-6">
+                                            <Loader2 className="animate-spin text-slate-300" size={24} />
+                                        </div>
+                                    ) : products.length > 0 ? (
+                                        products.map((product) => (
+                                            <CommandItem
+                                                key={product.slug}
+                                                onSelect={() => runCommand(() => router.push(`/${product.slug}`))}
+                                                icon={<Box size={20} />}
+                                                label={product.name}
+                                                tagline={product.tagline}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Command.Item disabled className="px-4 py-2 text-sm text-slate-500">
+                                            Tidak ada data katalog tersedia.
+                                        </Command.Item>
+                                    )}
                                 </Command.Group>
 
-                                {/* GRUP BARU: Navigasi Global */}
+                                {/* Navigasi Global */}
                                 <Command.Group heading="Navigasi" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <CommandItem
                                         onSelect={() => window.location.href = 'https://brosur.geocitra.com'}
@@ -127,18 +147,37 @@ export default function CommandMenu({
 /**
  * Sub-komponen untuk menangani Logika Warna saat Seleksi (Hover/Keyboard)
  */
-function CommandItem({ onSelect, icon, label }: { onSelect: () => void, icon: React.ReactNode, label: string }) {
+function CommandItem({
+    onSelect,
+    icon,
+    label,
+    tagline
+}: {
+    onSelect: () => void,
+    icon: React.ReactNode,
+    label: string,
+    tagline?: string
+}) {
     return (
         <Command.Item
             onSelect={onSelect}
-            // Menggunakan CSS Variables untuk menangani warna dinamis saat data-selected="true"
-            className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 text-slate-700 font-bold transition-colors
-                       aria-selected:bg-(--primary-color)/8 aria-selected:text-(--primary-color) group"
+            value={`${label} ${tagline || ''}`}
+            className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 transition-colors
+                       aria-selected:bg-[var(--primary-color)]/10 group"
         >
-            <div className="mr-3 transition-colors group-aria-selected:text-(--primary-color) text-slate-400">
+            <div className="mr-3 transition-colors group-aria-selected:text-[var(--primary-color)] text-slate-400">
                 {icon}
             </div>
-            {label}
+            <div className="flex flex-col">
+                <span className="font-bold text-slate-700 group-aria-selected:text-[var(--primary-color)]">
+                    {label}
+                </span>
+                {tagline && (
+                    <span className="text-xs text-slate-500 font-medium line-clamp-1">
+                        {tagline}
+                    </span>
+                )}
+            </div>
         </Command.Item>
     );
 }
