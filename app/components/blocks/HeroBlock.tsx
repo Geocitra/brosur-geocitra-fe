@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function HeroBlock({ data }: { data: any }) {
     // Variabel Animasi Stagger (Muncul Berurutan)
@@ -26,6 +27,13 @@ export default function HeroBlock({ data }: { data: any }) {
         }
     };
 
+    // [INTEGRATION FIX] Menangkap URL global dari BlockRenderer
+    // Memprioritaskan extractedFileUrl, jika tidak ada fallback ke data.fileUrl native
+    const targetUrl = data.extractedFileUrl || data.fileUrl || '';
+
+    // Mengekstrak nama file saja (misal: brosur-edaily.pdf)
+    const filename = targetUrl.split('/').pop() || '';
+
     return (
         <section className="relative overflow-visible py-20 md:py-28 lg:py-36">
             <div className="enterprise-container">
@@ -48,9 +56,7 @@ export default function HeroBlock({ data }: { data: any }) {
                             </span>
                         </motion.div>
 
-                        {/* The Grand Headline - Dynamic Gradient 
-                            [FIX] Menggunakan style inline untuk gradient agar sinkron dengan primaryColor
-                        */}
+                        {/* The Grand Headline - Dynamic Gradient */}
                         <motion.h1
                             variants={itemVariants}
                             className="text-(length:--fluid-h1) font-extrabold tracking-tighter leading-[1.05] mb-6 text-transparent bg-clip-text"
@@ -69,20 +75,34 @@ export default function HeroBlock({ data }: { data: any }) {
                             {data.description}
                         </motion.p>
 
-                        {/* The Breathing CTA - Sadar Warna
-                            [FIX] Menggunakan bg-[var(--primary-color)]
-                        */}
+                        {/* The Breathing CTA - Sadar Warna */}
                         <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                            <button
-                                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-                                className="group relative flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white shadow-aura transition-all duration-300 hover:-translate-y-1 active:scale-95 overflow-hidden min-h-14 bg-(--primary-color)"
-                                style={{ backgroundColor: 'var(--primary-color)' }}
-                            >
-                                <span className="relative z-10">Jelajahi Arsitektur</span>
-                                <ArrowRight size={20} className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
 
-                                <div className="absolute inset-0 w-full h-full bg-white/20 scale-0 rounded-full transition-transform duration-500 group-hover:scale-150 origin-center" />
-                            </button>
+                            {/* Pengecekan cerdas: Cegah navigasi error ke "/preview/" jika filename kosong */}
+                            {filename ? (
+                                <Link href={`/preview/${filename}`}>
+                                    <button
+                                        className="group relative flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white shadow-aura transition-all duration-300 hover:-translate-y-1 active:scale-95 overflow-hidden min-h-14 bg-(--primary-color)"
+                                        style={{ backgroundColor: 'var(--primary-color)' }}
+                                    >
+                                        <span className="relative z-10">Lihat Presentasi</span>
+                                        <ArrowRight size={20} className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+
+                                        {/* Efek Glossy Apple-style */}
+                                        <div className="absolute inset-0 w-full h-full bg-white/20 scale-0 rounded-full transition-transform duration-500 group-hover:scale-150 origin-center" />
+                                    </button>
+                                </Link>
+                            ) : (
+                                <button
+                                    onClick={() => alert("Dokumen presentasi belum tersedia untuk produk ini.")}
+                                    className="group relative flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 opacity-50 cursor-not-allowed min-h-14"
+                                    style={{ backgroundColor: 'var(--primary-color)' }}
+                                >
+                                    <span className="relative z-10">Lihat Presentasi</span>
+                                    <ArrowRight size={20} className="relative z-10" />
+                                </button>
+                            )}
+
                         </motion.div>
                     </motion.div>
 
