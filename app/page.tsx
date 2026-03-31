@@ -5,6 +5,8 @@ import HeroContent from './components/layout/HeroContent';
 import ProductCarousel from './components/ui/ProductCarousel';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 async function getShowcases() {
   try {
     const response = await api.get('/showcase');
