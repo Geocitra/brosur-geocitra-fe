@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Download, Sparkles } from 'lucide-react';
@@ -32,6 +32,18 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
     const baseUrl = 'https://brosur.geocitra.com/api';
     const pdfUrl = `${baseUrl}/uploads/${filename}`;
     const themeColor = '#0ea5e9';
+
+    // Logika ekstraksi URL routing
+    const returnPath = useMemo(() => {
+        let cleanName = filename.toLowerCase();
+        cleanName = cleanName.replace('.pdf', '');
+        cleanName = cleanName.replace('brosur-', '');
+        return `/${cleanName}`;
+    }, [filename]);
+
+    const handleNavigateBack = () => {
+        router.push(returnPath);
+    };
 
     useEffect(() => {
         if (isLastPageVisible) {
@@ -70,7 +82,7 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
                 <div className="max-w-6xl mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => router.back()}
+                            onClick={handleNavigateBack}
                             className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors shadow-sm group"
                         >
                             <ArrowLeft size={18} className="text-slate-300 group-hover:text-white transition-colors" />
@@ -159,7 +171,7 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
                                     <button onClick={() => setShowCTA(false)} className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-[10px] uppercase tracking-[0.2em] transition-colors">
                                         Tutup
                                     </button>
-                                    <button onClick={() => router.back()} className="flex-1 bg-white text-slate-950 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-slate-200 active:scale-95 transition-all shadow-lg">
+                                    <button onClick={handleNavigateBack} className="flex-1 bg-white text-slate-950 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-slate-200 active:scale-95 transition-all shadow-lg">
                                         Kembali ke Web <ArrowLeft size={16} className="rotate-135" />
                                     </button>
                                 </div>
