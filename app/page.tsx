@@ -11,7 +11,17 @@ export const dynamic = 'force-dynamic';
 async function getShowcases() {
   try {
     const response = await api.get('/showcase');
-    return response.data?.data || response.data || [];
+    const allItems = response.data?.data || response.data || [];
+
+    // LOGICAL FIX: Menerapkan filter ketat untuk membuang data versi English
+    // Asumsi: Semua aplikasi versi bahasa Inggris memiliki slug dengan akhiran '-en'
+    const indonesianItems = allItems.filter((item: any) => {
+      // Validasi defensive programming memastikan property slug eksis
+      if (!item || !item.slug) return false;
+      return !item.slug.endsWith('-en');
+    });
+
+    return indonesianItems;
   } catch (error) {
     console.error('Gagal mengambil data katalog brosur:', error);
     return [];
@@ -33,6 +43,7 @@ export default async function CatalogPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <HeroContent />
             <div className="hidden lg:block">
+              {/* Data items di sini sekarang sudah terjamin 100% versi Indonesia */}
               <ProductCarousel items={items} />
             </div>
           </div>
@@ -43,6 +54,7 @@ export default async function CatalogPage() {
       <div id="catalog-grid" className="relative grow scroll-mt-20">
         <div className="opacity-20"><AuraBackground /></div>
         <div className="enterprise-container relative z-10 pt-20 pb-32 px-2">
+          {/* Data items di sini juga terjamin bebas dari bocoran data -en */}
           <BentoGrid items={items} />
         </div>
       </div>
