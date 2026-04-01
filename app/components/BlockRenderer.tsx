@@ -3,7 +3,7 @@
 import React from 'react';
 import HeroBlock from './blocks/HeroBlock';
 import FeaturesBlock from './blocks/FeaturesBlock';
-import DownloadBlock from './blocks/DownloadBlock';
+import SocialProofBlock from './blocks/SocialProofBlock'; // Import Komponen Baru
 import FaqBlock from './blocks/FaqBlock';
 import VideoBlock from './blocks/VideoBlock';
 
@@ -11,7 +11,7 @@ import VideoBlock from './blocks/VideoBlock';
 const blockComponents: { [key: string]: React.ElementType } = {
     HeroBlock: HeroBlock,
     FeaturesBlock: FeaturesBlock,
-    DownloadBlock: DownloadBlock,
+    SocialProofBlock: SocialProofBlock, // Mendaftarkan SocialProofBlock ke dalam mesin
     FaqBlock: FaqBlock,
     VideoBlock: VideoBlock,
 };
@@ -21,12 +21,10 @@ export default function BlockRenderer({ blocks }: { blocks: any[] }) {
         return null;
     }
 
-    // [INTELLIGENCE INJECTION]
-    // Kita memindai array blocks untuk mencari DownloadBlock terlebih dahulu.
-    // Tujuannya untuk mengekstrak URL PDF dan menjadikannya variabel global
-    // di tingkat halaman ini, sehingga HeroBlock bisa menggunakannya untuk tombol "Lihat Presentasi".
-    const downloadBlock = blocks.find((b: any) => b.type === 'DownloadBlock');
-    const globalFileUrl = downloadBlock?.data?.fileUrl || '';
+    // [ANALISA ARSITEKTUR]: 
+    // Logika Intelligence Injection (Global File URL) TELAH DIHAPUS.
+    // Berdasarkan prinsip Low Coupling, setiap komponen (seperti HeroBlock) 
+    // kini memegang tanggung jawab atas datanya sendiri dari JSON Payload.
 
     return (
         // flex-col tanpa batasan lebar, karena setiap blok mengatur lebarnya sendiri 
@@ -36,21 +34,13 @@ export default function BlockRenderer({ blocks }: { blocks: any[] }) {
                 const Component = blockComponents[block.type];
 
                 if (!Component) {
-                    console.warn(`[Block Factory] Block type [${block.type}] tidak dipetakan.`);
+                    console.warn(`[Block Factory] Block type [${block.type}] tidak dipetakan di BlockRenderer.`);
                     return null;
                 }
 
-                // Kita menduplikasi data asli dari JSON
-                let injectedData = { ...block.data };
-
-                // Jika komponen yang akan di-render adalah HeroBlock,
-                // kita suntikkan URL PDF yang sudah kita temukan sebelumnya.
-                if (block.type === 'HeroBlock') {
-                    injectedData.extractedFileUrl = globalFileUrl;
-                }
-
-                // Me-render komponen secara dinamis dengan data yang sudah disempurnakan
-                return <Component key={`${block.type}-${index}`} data={injectedData} />;
+                // Me-render komponen secara dinamis. 
+                // block.data langsung dilempar (pass down) tanpa perlu modifikasi/injeksi tambahan.
+                return <Component key={`${block.type}-${index}`} data={block.data} />;
             })}
         </div>
     );

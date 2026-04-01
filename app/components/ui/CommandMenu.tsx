@@ -61,7 +61,7 @@ export default function CommandMenu({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4 pointer-events-none">
+                <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4 pointer-events-none">
 
                     {/* Backdrop Blur */}
                     <motion.div
@@ -98,7 +98,7 @@ export default function CommandMenu({
                             </div>
 
                             {/* List Area */}
-                            <Command.List className="max-h-[350px] overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
+                            <Command.List className="max-h-87.5 overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
                                 <Command.Empty className="py-12 text-center text-slate-500">
                                     <p className="font-medium text-lg">Brosur tidak ditemukan.</p>
                                     <p className="text-sm mt-1">Coba gunakan kata kunci lain.</p>
@@ -163,13 +163,13 @@ function CommandItem({
             onSelect={onSelect}
             value={`${label} ${tagline || ''}`}
             className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 transition-colors
-                       aria-selected:bg-[var(--primary-color)]/10 group"
+                       aria-selected:bg-(--primary-color)/10 group"
         >
-            <div className="mr-3 transition-colors group-aria-selected:text-[var(--primary-color)] text-slate-400">
+            <div className="mr-3 transition-colors group-aria-selected:text-(--primary-color) text-slate-400">
                 {icon}
             </div>
             <div className="flex flex-col">
-                <span className="font-bold text-slate-700 group-aria-selected:text-[var(--primary-color)]">
+                <span className="font-bold text-slate-700 group-aria-selected:text-(--primary-color)">
                     {label}
                 </span>
                 {tagline && (

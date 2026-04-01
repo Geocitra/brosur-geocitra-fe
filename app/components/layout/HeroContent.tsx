@@ -25,20 +25,20 @@ export default function HeroContent() {
                         priority
                     />
                 </div>
-                <div className="h-10 w-1 rounded-full bg-[var(--primary-color)] opacity-50" />
+                <div className="h-10 w-1 rounded-full bg-(--primary-color) opacity-50" />
                 <span className="text-slate-400 font-black text-xl tracking-[0.2em] uppercase">
                     Showcase
                 </span>
             </div>
 
             <div className="max-w-xl">
-                <h1 className="text-[length:var(--fluid-h1)] font-extrabold tracking-tighter leading-[1.05] mb-8 text-white">
+                <h1 className="text-(length:--fluid-h1) font-extrabold tracking-tighter leading-[1.05] mb-8 text-white">
                     Ekosistem Perangkat Lunak <br />
-                    <span className="text-transparent bg-clip-text bg-linear-to-r from-white via-white to-[var(--primary-color)]">
+                    <span className="text-transparent bg-clip-text bg-linear-to-r from-white via-white to-(--primary-color)">
                         Terintegrasi.
                     </span>
                 </h1>
-                <p className="text-[length:var(--fluid-p)] leading-relaxed max-w-2xl font-medium text-slate-400">
+                <p className="text-(length:--fluid-p) leading-relaxed max-w-2xl font-medium text-slate-400">
                     Dokumentasi teknis lengkap ekosistem perangkat lunak Geocitra. Temukan spesifikasi sistem, alur kerja cerdas, dan fitur unggulan setiap solusi kami melalui platform brosur interaktif.
                 </p>
             </div>

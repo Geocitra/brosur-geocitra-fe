@@ -135,16 +135,6 @@ export default function ProductCarousel({ items }: { items: any[] }) {
                                         <p className="text-slate-300 font-bold text-lg mb-10 line-clamp-2 leading-relaxed">
                                             {items[imageIndex].tagline}
                                         </p>
-
-                                        <div className="flex gap-5">
-                                            <button
-                                                onClick={scrollToGrid}
-                                                className="bg-[var(--primary-color)] text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-[0_20px_40px_-10px_rgba(var(--primary-rgb),0.5)] active:scale-95"
-                                            >
-                                                Katalog Utama
-                                            </button>
-                                            
-                                        </div>
                                     </motion.div>
                                 </div>
                             </div>

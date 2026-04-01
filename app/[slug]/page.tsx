@@ -36,8 +36,11 @@ export default async function ShowcasePage({ params }: PageProps) {
             <Navbar appName={data.name} />
 
             {/* KONTEN UTAMA */}
-            {/* Lebar penuh agar desain blok background bisa meluas ke ujung layar */}
-            <main className="relative z-10 grow w-full pt-20">
+            {/* [FIX ANALISA]: Menghapus kelas 'pt-20'. 
+                Biarkan komponen anak (HeroBlock) yang mengatur jarak amannya sendiri terhadap Navbar
+                agar blok warna background bisa langsung merapat ke batas atas layar.
+            */}
+            <main className="relative z-10 grow w-full">
                 <BlockRenderer blocks={data.blocks} />
             </main>
 
