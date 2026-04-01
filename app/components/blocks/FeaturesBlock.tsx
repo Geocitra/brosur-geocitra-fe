@@ -84,7 +84,7 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                                         // KUNCI LOGIKA LAYOUT: 
                                         // Mobile: tidak boleh menyusut (shrink-0), lebar statis (w-[280px])
                                         // Desktop (lg): mengambil lebar parent penuh (lg:w-full), boleh menyesuaikan (lg:shrink)
-                                        "shrink-0 w-[280px] md:w-[320px] lg:w-full lg:shrink",
+                                        "shrink-0 w-70 md:w-[320px] lg:w-full lg:shrink",
                                         isActive
                                             ? "bg-white/60 backdrop-blur-3xl border-slate-300 shadow-lg lg:translate-x-3 scale-100"
                                             : "bg-white/20 backdrop-blur-md border-transparent hover:bg-white/40 hover:border-slate-200"
@@ -118,7 +118,7 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                     </div>
 
                     {/* DISPLAY CONTENT: KARTU UTAMA */}
-                    <div className="flex-1 w-full min-h-[500px] relative perspective-1000">
+                    <div className="flex-1 w-full min-h-125 relative perspective-1000">
 
                         {/* Blob cahaya spesifik di belakang kartu konten */}
                         <div

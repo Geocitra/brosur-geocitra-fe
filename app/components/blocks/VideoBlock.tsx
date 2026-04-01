@@ -25,7 +25,7 @@ export default function VideoBlock({ data }: VideoBlockProps) {
                 style={{ backgroundColor: 'var(--primary-color)' }}
             >
                 {/* Overlay tipis agar warna solid tidak terlihat 'murah' (menambah kedalaman) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent mix-blend-multiply" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent mix-blend-multiply" />
             </div>
 
             <div className="enterprise-container relative z-10">
@@ -63,8 +63,8 @@ export default function VideoBlock({ data }: VideoBlockProps) {
                     className="relative w-full max-w-5xl mx-auto"
                 >
                     {/* Bingkai Putih Opsional (Seperti Polaroid/Galeri) untuk memisahkan video dari background */}
-                    <div className="bg-white p-2 md:p-3 rounded-3xl md:rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
-                        <div className="relative aspect-video rounded-2xl md:rounded-[1.5rem] overflow-hidden bg-slate-900 border border-slate-100">
+                    <div className="bg-white p-2 md:p-3 rounded-3xl md:rounded-4xl shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
+                        <div className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-slate-900 border border-slate-100">
 
                             <iframe
                                 className="absolute inset-0 w-full h-full"

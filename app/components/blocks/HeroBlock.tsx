@@ -59,8 +59,8 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                 style={{ backgroundColor: 'var(--primary-color)' }}
             >
                 {/* Overlay Premium: Memberikan tekstur pada warna solid agar tidak terlihat seperti template murah */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-black/20 mix-blend-overlay" />
-                <div className="absolute -top-[20%] -right-[10%] w-[500px] h-[500px] rounded-full bg-white/10 blur-[80px]" />
+                <div className="absolute inset-0 bg-linear-to-br from-white/20 to-black/20 mix-blend-overlay" />
+                <div className="absolute -top-[20%] -right-[10%] w-125 h-125 rounded-full bg-white/10 blur-[80px]" />
             </div>
 
             <div className="enterprise-container relative z-10 w-full">
@@ -134,7 +134,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                             viewport={{ once: true }}
                             transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
                             // INI KUNCI SKALA: Gambar memaksa ukurannya 130% dan tumpah ke margin kanan (-mr-30%)
-                            className="relative w-[115%] -ml-[7.5%] md:w-[100%] md:ml-0 lg:w-[130%] lg:-mr-[30%] z-20 mt-10 lg:mt-0"
+                            className="relative w-[115%] -ml-[7.5%] md:w-full md:ml-0 lg:w-[130%] lg:-mr-[30%] z-20 mt-10 lg:mt-0"
                         >
                             {/* Efek melayang organik (bukan 3D putar-putar yang pusing) */}
                             <motion.img

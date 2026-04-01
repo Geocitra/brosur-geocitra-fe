@@ -47,13 +47,13 @@ export default function ProductCarousel({ items }: { items: any[] }) {
     };
 
     return (
-        <div className="relative w-full h-[550px] md:h-[650px] flex flex-col items-center group perspective-1000">
+        <div className="relative w-full h-137.5 md:h-162.5 flex flex-col items-center group perspective-1000">
 
             <div className="relative w-full h-full flex items-center justify-center">
 
                 {/* Navigasi Manual Kiri */}
                 <button
-                    className="absolute -left-8 md:-left-20 z-50 p-5 rounded-full bg-white shadow-2xl border border-slate-100 text-slate-900 hover:bg-[var(--primary-color)] hover:text-white transition-all active:scale-90 opacity-0 group-hover:opacity-100 hidden md:block"
+                    className="absolute -left-8 md:-left-20 z-50 p-5 rounded-full bg-white shadow-2xl border border-slate-100 text-slate-900 hover:bg-(--primary-color) hover:text-white transition-all active:scale-90 opacity-0 group-hover:opacity-100 hidden md:block"
                     onClick={() => paginate(-1)}
                 >
                     <ChevronLeft size={32} />
@@ -123,7 +123,7 @@ export default function ProductCarousel({ items }: { items: any[] }) {
                                         className="max-w-md"
                                     >
                                         <div className="flex items-center gap-3 mb-6">
-                                            <div className="w-10 h-1.5 rounded-full bg-[var(--primary-color)] shadow-[0_0_15px_var(--primary-color)]" />
+                                            <div className="w-10 h-1.5 rounded-full bg-(--primary-color) shadow-[0_0_15px_var(--primary-color)]" />
                                             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white">
                                                 Premium Showcase
                                             </span>
@@ -144,7 +144,7 @@ export default function ProductCarousel({ items }: { items: any[] }) {
 
                 {/* Navigasi Manual Kanan */}
                 <button
-                    className="absolute -right-8 md:-right-20 z-50 p-5 rounded-full bg-white shadow-2xl border border-slate-100 text-slate-900 hover:bg-[var(--primary-color)] hover:text-white transition-all active:scale-90 opacity-0 group-hover:opacity-100 hidden md:block"
+                    className="absolute -right-8 md:-right-20 z-50 p-5 rounded-full bg-white shadow-2xl border border-slate-100 text-slate-900 hover:bg-(--primary-color) hover:text-white transition-all active:scale-90 opacity-0 group-hover:opacity-100 hidden md:block"
                     onClick={() => paginate(1)}
                 >
                     <ChevronRight size={32} />
@@ -159,7 +159,7 @@ export default function ProductCarousel({ items }: { items: any[] }) {
                         onClick={() => setPage([i, i > imageIndex ? 1 : -1])}
                         className={cn(
                             "h-2 rounded-full transition-all duration-700",
-                            imageIndex === i ? "w-20 bg-[var(--primary-color)] shadow-[0_0_15px_var(--primary-color)]" : "w-4 bg-slate-800 hover:bg-slate-700"
+                            imageIndex === i ? "w-20 bg-(--primary-color) shadow-[0_0_15px_var(--primary-color)]" : "w-4 bg-slate-800 hover:bg-slate-700"
                         )}
                     />
                 ))}
