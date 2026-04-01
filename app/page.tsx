@@ -4,6 +4,7 @@ import AuraBackground from './components/ui/AuraBackground';
 import HeroContent from './components/layout/HeroContent';
 import ProductCarousel from './components/ui/ProductCarousel';
 import Image from 'next/image';
+import TechStack from './components/ui/TechStack';
 import Footer from '@/app/components/layout/Footer';
 
 export const dynamic = 'force-dynamic';
@@ -58,6 +59,8 @@ export default async function CatalogPage() {
           <BentoGrid items={items} />
         </div>
       </div>
+
+      <TechStack />
 
       {/* 3. SOLID TERMINAL FOOTER (Clean & Monochrome) */}
       <Footer />
