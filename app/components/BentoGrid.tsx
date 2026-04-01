@@ -2,18 +2,35 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation'; // UBAH: Tambahkan usePathname
 import { ArrowRight, LayoutGrid, Sparkles, FolderKanban } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import Image from 'next/image';
 
 export default function BentoGrid({ items }: { items: any[] }) {
+    // 1. Ekstraksi Path & Deteksi Bahasa Dinamis
+    const pathname = usePathname() || '';
+
+    // Logika Pintar: Menangkap root '/en' ATAU slug berakhiran '-en'
+    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+
+    // 2. Kamus Translasi (Dictionary)
+    const t = {
+        emptyTitle: isEnglish ? "Empty Showcase" : "Etalase Kosong",
+        emptyDesc: isEnglish
+            ? "No application brochures have been published yet."
+            : "Belum ada brosur aplikasi yang diterbitkan.",
+        openProduct: isEnglish ? "Open Product" : "Buka Produk",
+        available: isEnglish ? "Available" : "Tersedia"
+    };
+
     if (!items || items.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-32 text-center bg-white rounded-[2.5rem] border border-slate-200 shadow-sm">
                 <LayoutGrid className="w-16 h-16 text-slate-200 mb-6" />
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Etalase Kosong</h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">{t.emptyTitle}</h3>
                 <p className="text-slate-500 max-w-md">
-                    Belum ada brosur aplikasi yang diterbitkan.
+                    {t.emptyDesc}
                 </p>
             </div>
         );
@@ -110,13 +127,15 @@ export default function BentoGrid({ items }: { items: any[] }) {
                                         style={{ color: item.primaryColor }}
                                     >
                                         <ArrowRight size={isFeatured ? 18 : 14} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
-                                        <span>Buka Produk</span>
+                                        <span>{t.openProduct}</span>
                                     </Link>
 
                                     {!isFeatured && (
                                         <div className="flex items-center gap-2">
                                             <div className="w-1 h-1 rounded-full opacity-50" style={{ backgroundColor: item.primaryColor }} />
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Available</span>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                                                {t.available}
+                                            </span>
                                         </div>
                                     )}
                                 </div>
