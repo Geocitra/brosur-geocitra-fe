@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { Command } from 'cmdk';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Search, X, LayoutDashboard, Box, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/app/lib/axios';
@@ -15,18 +15,44 @@ export default function CommandMenu({
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }) {
     const router = useRouter();
+    const params = useParams();
     const [products, setProducts] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    // [INTELLIGENCE INJECTION] Fetch data & Manipulasi Sorting
+    // 1. Ekstraksi Parameter & Deteksi Bahasa
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
+
+    // [INTELLIGENCE INJECTION] Tentukan URL Dashboard berdasarkan bahasa
+    const dashboardUrl = isEnglish ? '/en' : '/';
+
+    // 2. Kamus Translasi (Dictionary)
+    const t = {
+        placeholder: isEnglish ? "Search application brochures (e.g., Pam Jaya, Litera...)" : "Cari brosur aplikasi (Contoh: Pam Jaya, Litera...)",
+        emptyTitle: isEnglish ? "No brochures found." : "Brosur tidak ditemukan.",
+        emptyDesc: isEnglish ? "Try using different keywords." : "Coba gunakan kata kunci lain.",
+        catalogHeading: isEnglish ? "Geocitra Catalog" : "Katalog Geocitra",
+        noData: isEnglish ? "No catalog data available." : "Tidak ada data katalog tersedia.",
+        navHeading: isEnglish ? "Navigation" : "Navigasi",
+        backToDash: isEnglish ? "Back to Main Dashboard" : "Kembali ke Dashboard Utama"
+    };
+
+    // [INTELLIGENCE INJECTION] Fetch data, Filtering Bahasa, & Manipulasi Sorting
     useEffect(() => {
         const fetchProducts = async () => {
             try {
+                setIsLoading(true);
                 const response = await api.get('/showcase');
                 const rawData = response.data?.data || response.data;
 
+                // FILTERING LOGIC: Cegah data ID dan EN bercampur di hasil pencarian
+                const localizedData = rawData.filter((item: any) => {
+                    const itemIsEn = item.slug.endsWith('-en');
+                    return isEnglish ? itemIsEn : !itemIsEn;
+                });
+
                 // Eksekusi Sorting Ascending (A-Z) berdasarkan nama produk
-                const sortedData = [...rawData].sort((a, b) =>
+                const sortedData = localizedData.sort((a: any, b: any) =>
                     a.name.localeCompare(b.name)
                 );
 
@@ -39,7 +65,7 @@ export default function CommandMenu({
         };
 
         fetchProducts();
-    }, []);
+    }, [isEnglish]); // Dependency array di-update: Trigger ulang jika bahasa berubah
 
     // Keyboard Shortcut Logic
     useEffect(() => {
@@ -86,7 +112,7 @@ export default function CommandMenu({
                                 <Search className="mr-3 h-5 w-5 text-slate-400" />
                                 <Command.Input
                                     autoFocus
-                                    placeholder="Cari brosur aplikasi (Contoh: Pam Jaya, Litera...)"
+                                    placeholder={t.placeholder}
                                     className="flex h-16 w-full bg-transparent outline-none placeholder:text-slate-400 text-slate-900 font-medium text-lg"
                                 />
                                 <button
@@ -100,12 +126,12 @@ export default function CommandMenu({
                             {/* List Area */}
                             <Command.List className="max-h-87.5 overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
                                 <Command.Empty className="py-12 text-center text-slate-500">
-                                    <p className="font-medium text-lg">Brosur tidak ditemukan.</p>
-                                    <p className="text-sm mt-1">Coba gunakan kata kunci lain.</p>
+                                    <p className="font-medium text-lg">{t.emptyTitle}</p>
+                                    <p className="text-sm mt-1">{t.emptyDesc}</p>
                                 </Command.Empty>
 
-                                {/* Ekosistem Aplikasi Dinamis (Sorted ASC) */}
-                                <Command.Group heading="Katalog Geocitra" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                {/* Ekosistem Aplikasi Dinamis (Sorted ASC & Localized) */}
+                                <Command.Group heading={t.catalogHeading} className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     {isLoading ? (
                                         <div className="flex justify-center items-center py-6">
                                             <Loader2 className="animate-spin text-slate-300" size={24} />
@@ -122,17 +148,17 @@ export default function CommandMenu({
                                         ))
                                     ) : (
                                         <Command.Item disabled className="px-4 py-2 text-sm text-slate-500">
-                                            Tidak ada data katalog tersedia.
+                                            {t.noData}
                                         </Command.Item>
                                     )}
                                 </Command.Group>
 
                                 {/* Navigasi Global */}
-                                <Command.Group heading="Navigasi" className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <Command.Group heading={t.navHeading} className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <CommandItem
-                                        onSelect={() => window.location.href = 'https://brosur.geocitra.com'}
+                                        onSelect={() => runCommand(() => router.push(dashboardUrl))}
                                         icon={<LayoutDashboard size={20} />}
-                                        label="Kembali ke Dashboard Utama"
+                                        label={t.backToDash}
                                     />
                                 </Command.Group>
                             </Command.List>

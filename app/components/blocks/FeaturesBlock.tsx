@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useParams } from 'next/navigation';
 import * as Icons from 'lucide-react';
 
 interface FeatureItem {
@@ -23,8 +24,22 @@ interface FeaturesBlockProps {
 const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
 
 export default function FeaturesBlock({ data }: FeaturesBlockProps) {
-    const sectionTitle = data.title || "Keunggulan Fitur";
     const [activeTab, setActiveTab] = useState(0);
+
+    // 1. Ekstraksi Parameter & Deteksi Bahasa
+    const params = useParams();
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
+
+    // 2. Kamus Translasi Dinamis
+    const t = {
+        defaultTitle: isEnglish ? "Core Features" : "Keunggulan Fitur",
+        badge: isEnglish ? "Core Features" : "Fitur Utama",
+        featureLabel: isEnglish ? "Feature" : "Fitur",
+        emptyVisual: isEnglish ? "Visualization not available" : "Visualisasi belum tersedia"
+    };
+
+    const sectionTitle = data.title || t.defaultTitle;
 
     // Auto-rotate logic: Berpindah tab setiap 15 detik
     useEffect(() => {
@@ -55,7 +70,10 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                 <div className="text-center mb-16 relative z-10">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 backdrop-blur-3xl border border-slate-200 mb-6 shadow-sm">
                         <Icons.Sparkles className="w-4 h-4" style={{ color: 'var(--primary-color)' }} />
-                        <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-700">Core Features</span>
+                        {/* UPDATE: Lokalisasi Label Badge */}
+                        <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-700">
+                            {t.badge}
+                        </span>
                     </div>
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
@@ -81,9 +99,6 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                                     onClick={() => setActiveTab(index)}
                                     className={cn(
                                         "flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-500 text-left border-2 snap-center group overflow-hidden relative",
-                                        // KUNCI LOGIKA LAYOUT: 
-                                        // Mobile: tidak boleh menyusut (shrink-0), lebar statis (w-[280px])
-                                        // Desktop (lg): mengambil lebar parent penuh (lg:w-full), boleh menyesuaikan (lg:shrink)
                                         "shrink-0 w-70 md:w-[320px] lg:w-full lg:shrink",
                                         isActive
                                             ? "bg-white/60 backdrop-blur-3xl border-slate-300 shadow-lg lg:translate-x-3 scale-100"
@@ -110,6 +125,8 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                                             isActive ? "text-slate-900 text-lg drop-shadow-sm" : "text-slate-500 group-hover:text-slate-700"
                                         )}
                                     >
+                                        {/* Catatan Analis: Nilai f.title berasal dari database (JSON), 
+                                            sehingga otomatis menyesuaikan bahasa data tersebut. */}
                                         {f.title}
                                     </span>
                                 </button>
@@ -148,20 +165,22 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                                             style={{ backgroundColor: 'var(--primary-color)', color: '#ffffff' }}
                                         >
                                             <ActiveIconComponent size={14} />
-                                            Fitur 0{activeTab + 1}
+                                            {/* UPDATE: Lokalisasi Label Iterasi Fitur */}
+                                            {t.featureLabel} 0{activeTab + 1}
                                         </div>
                                     </div>
 
                                     <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-5 tracking-tight leading-[1.2] drop-shadow-sm">
+                                        {/* Judul dari database */}
                                         {activeFeature.title}
                                     </h2>
                                     <p className="text-lg text-slate-700 leading-relaxed font-medium max-w-2xl">
+                                        {/* Deskripsi dari database */}
                                         {activeFeature.desc}
                                     </p>
                                 </div>
 
                                 <div className="relative mt-auto pt-4 z-10">
-                                    {/* Frame gambar tebal */}
                                     <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 group/img aspect-video flex items-center justify-center">
                                         {activeFeature.mediaUrl ? (
                                             activeFeature.mediaType === 'video' ? (
@@ -184,7 +203,8 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
                                         ) : (
                                             <div className="flex flex-col items-center justify-center text-slate-400 opacity-60">
                                                 <Icons.Image size={48} className="mb-4" />
-                                                <p className="font-medium">Visualisasi belum tersedia</p>
+                                                {/* UPDATE: Lokalisasi State Kosong */}
+                                                <p className="font-medium">{t.emptyVisual}</p>
                                             </div>
                                         )}
                                         <div className="absolute inset-0 ring-1 ring-inset ring-black/5 pointer-events-none rounded-3xl" />
