@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import PdfDrawer from '../ui/PdfDrawer';
+import { useRouter } from 'next/navigation';
 
 // 1. Definisi antarmuka kontrak data yang ketat (Strict Interface)
 interface HeroData {
@@ -19,10 +18,10 @@ interface HeroBlockProps {
 }
 
 export default function HeroBlock({ data }: HeroBlockProps) {
-    // 2. State management untuk mengontrol Drawer
-    const [isPdfOpen, setIsPdfOpen] = useState(false);
+    // 2. Inisialisasi Router untuk navigasi Next.js
+    const router = useRouter();
 
-    // Variabel Animasi
+    // Variabel Animasi Stagger (Muncul Berurutan)
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -43,9 +42,19 @@ export default function HeroBlock({ data }: HeroBlockProps) {
         }
     };
 
-    // 3. Ekstraksi Data Aman
+    // 3. Ekstraksi Data Aman (Defensive Assignment)
     const targetUrl = data.fileUrl || '';
     const ctaText = data.buttonText || 'Lihat Presentasi';
+
+    // 4. Logika Ekstraksi Filename
+    // Mengambil nama file murni dari path (misal: '/uploads/brosur.pdf' -> 'brosur.pdf')
+    const fileName = targetUrl ? targetUrl.split('/').pop() : '';
+
+    const handleNavigateToPreview = () => {
+        if (fileName) {
+            router.push(`/preview/${fileName}`);
+        }
+    };
 
     return (
         // Wrapper utama diubah menjadi bg-white bersih untuk kontras tinggi.
@@ -53,7 +62,6 @@ export default function HeroBlock({ data }: HeroBlockProps) {
         <section className="relative w-full overflow-x-clip bg-white pt-24 pb-16 lg:pt-36 lg:pb-32 min-h-[90vh] flex items-center">
 
             {/* THE MONOLITH: Identitas Warna Ekstrim (Responsive) */}
-            {/* Mobile: Muncul dari bawah | Desktop: Memblokade area kanan layar */}
             <div
                 className="absolute bottom-0 right-0 w-full h-[45%] md:h-[55%] lg:h-[85%] lg:top-[7.5%] lg:bottom-auto lg:w-[45vw] rounded-t-[3rem] lg:rounded-t-none lg:rounded-l-[5rem] -z-10 overflow-hidden"
                 style={{ backgroundColor: 'var(--primary-color)' }}
@@ -105,7 +113,8 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                         <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
                             {targetUrl ? (
                                 <button
-                                    onClick={() => setIsPdfOpen(true)}
+                                    // Event onClick sekarang memicu navigasi ke halaman viewer
+                                    onClick={handleNavigateToPreview}
                                     className="group relative flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-95 overflow-hidden min-h-14 cursor-pointer"
                                     style={{ backgroundColor: 'var(--primary-color)' }}
                                 >
@@ -133,16 +142,13 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
-                            // INI KUNCI SKALA: Gambar memaksa ukurannya 130% dan tumpah ke margin kanan (-mr-30%)
                             className="relative w-[115%] -ml-[7.5%] md:w-full md:ml-0 lg:w-[130%] lg:-mr-[30%] z-20 mt-10 lg:mt-0"
                         >
-                            {/* Efek melayang organik (bukan 3D putar-putar yang pusing) */}
                             <motion.img
                                 animate={{ y: [0, -20, 0] }}
                                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                                 src={data.imageUrl}
                                 alt={data.title}
-                                // Menghilangkan glassmorphism, menggantinya dengan bayangan super tajam
                                 className="w-full h-auto object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.35)]"
                             />
                         </motion.div>
@@ -151,15 +157,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                 </div>
             </div>
 
-            {/* 4. Injeksi Komponen PdfDrawer */}
-            {targetUrl && (
-                <PdfDrawer
-                    isOpen={isPdfOpen}
-                    onClose={() => setIsPdfOpen(false)}
-                    fileUrl={targetUrl}
-                    appName={data.title}
-                />
-            )}
+            {/* Komponen PdfDrawer telah diekstraksi seluruhnya demi kebersihan DOM dan performa */}
         </section>
     );
 }
