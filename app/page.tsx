@@ -6,6 +6,7 @@ import ProductCarousel from './components/ui/ProductCarousel';
 import Image from 'next/image';
 import TechStack from './components/ui/TechStack';
 import Footer from '@/app/components/layout/Footer';
+import LanguageSwitcher from './components/ui/LanguageSwitcher';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,6 +39,9 @@ export default async function CatalogPage() {
       className="relative min-h-screen bg-[#f8fafc] overflow-hidden flex flex-col"
       style={{ '--primary-color': corporateBlue } as React.CSSProperties}
     >
+
+      <LanguageSwitcher />
+      
       {/* 1. SOLID DARK HERO */}
       <section className="relative w-full bg-slate-950 pt-16 pb-24 md:pt-24 md:pb-32 border-b-4 border-(--primary-color)">
         <div className="enterprise-container relative z-10">

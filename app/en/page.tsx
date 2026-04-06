@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Metadata } from 'next';
 import Footer from '../components/layout/Footer';
 import TechStack from '../components/ui/TechStack';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,6 +36,10 @@ export default async function EnglishCatalogPage() {
             className="relative min-h-screen bg-[#f8fafc] overflow-hidden flex flex-col"
             style={{ '--primary-color': corporateBlue } as React.CSSProperties}
         >
+
+            <LanguageSwitcher />
+            
+            {/* 1. SOLID DARK HERO */}
             {/* FIX TAILWIND: border-(--primary-color) */}
             <section className="relative w-full bg-slate-950 pt-16 pb-24 md:pt-24 md:pb-32 border-b-4 border-(--primary-color)">
                 <div className="enterprise-container relative z-10">
