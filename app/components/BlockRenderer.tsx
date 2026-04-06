@@ -6,6 +6,8 @@ import FeaturesBlock from './blocks/FeaturesBlock';
 import SocialProofBlock from './blocks/SocialProofBlock'; // Import Komponen Baru
 import FaqBlock from './blocks/FaqBlock';
 import VideoBlock from './blocks/VideoBlock';
+import AdvantagesBlock from './blocks/AdvantagesBlock';
+
 
 // Peta Komponen: Menghubungkan string 'type' dari JSON ke Komponen React
 const blockComponents: { [key: string]: React.ElementType } = {
@@ -14,6 +16,7 @@ const blockComponents: { [key: string]: React.ElementType } = {
     SocialProofBlock: SocialProofBlock, // Mendaftarkan SocialProofBlock ke dalam mesin
     FaqBlock: FaqBlock,
     VideoBlock: VideoBlock,
+    AdvantagesBlock: AdvantagesBlock,   
 };
 
 export default function BlockRenderer({ blocks }: { blocks: any[] }) {
