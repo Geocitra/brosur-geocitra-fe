@@ -34,32 +34,35 @@ export default function Navbar({ appName }: { appName: string }) {
 
     return (
         <>
-            <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-                <nav className="bg-white w-full max-w-3xl rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg shadow-slate-200/50 pointer-events-auto border border-slate-200">
+            {/* Jarak atas responsif: top-4 di HP, top-6 di Desktop */}
+            <div className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-3 md:px-4 pointer-events-none">
+                {/* Padding internal kapsul disesuaikan untuk menghemat ruang di HP */}
+                <nav className="bg-white w-full max-w-3xl rounded-full px-2 md:px-4 py-2 md:py-2.5 flex items-center justify-between shadow-lg shadow-slate-200/50 pointer-events-auto border border-slate-200">
 
                     {/* LENGAN KIRI: Back Button & Brand */}
-                    <div className="flex items-center gap-2 pl-1">
+                    <div className="flex items-center gap-1 md:gap-2 pl-1">
                         <a
                             href={dashboardUrl}
-                            className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-900 transition-colors group"
+                            className="p-1.5 md:p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-900 transition-colors group"
                             title={isEnglish ? "Back to Dashboard" : "Kembali ke Dashboard"}
                         >
-                            <ArrowLeft size={19} className="group-hover:-translate-x-0.5 transition-transform" />
+                            <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
                         </a>
 
-                        <div className="w-px h-6 bg-slate-200 mx-1" />
+                        <div className="w-px h-5 md:h-6 bg-slate-200 mx-0.5 md:mx-1" />
 
-                        <span className="font-extrabold text-xl tracking-tighter text-slate-900 ml-1">
+                        {/* Ukuran font brand mengecil sedikit di HP agar tidak rakus ruang */}
+                        <span className="font-extrabold text-base md:text-xl tracking-tighter text-slate-900 ml-1">
                             GEOCITRA
                         </span>
 
                         <div
-                            className="w-1.5 h-1.5 rounded-full"
+                            className="w-1.5 h-1.5 rounded-full hidden sm:block"
                             style={{ backgroundColor: 'var(--primary-color)' }}
                         />
 
                         <span
-                            className="hidden sm:inline-block text-sm font-bold text-slate-500"
+                            className="hidden sm:inline-block text-xs md:text-sm font-bold text-slate-500 max-w-25 md:max-w-none truncate"
                             style={{ color: 'var(--primary-color)' }}
                         >
                             {appName}
@@ -67,14 +70,16 @@ export default function Navbar({ appName }: { appName: string }) {
                     </div>
 
                     {/* LENGAN KANAN: Tools Area (Language & Search) */}
-                    <div className="flex items-center gap-3">
+                    {/* Gap antar tool direduksi di HP */}
+                    <div className="flex items-center gap-1.5 md:gap-3 pr-1 md:pr-0">
 
                         {/* THE LANGUAGE SWITCHER (Pill UI Design) */}
                         <div className="flex items-center bg-slate-100/70 border border-slate-200/80 rounded-full p-0.5">
                             <button
                                 onClick={() => handleLanguageSwitch('id')}
-                                disabled={!isEnglish} // Disable klik jika sudah di posisi ID
-                                className={`flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-extrabold rounded-full transition-all duration-300 ${!isEnglish
+                                disabled={!isEnglish}
+                                // Padding dan teks diperkecil pada layar mobile
+                                className={`flex items-center gap-1.5 px-2 py-1 md:px-3 md:py-1.5 text-[9px] md:text-[10px] font-extrabold rounded-full transition-all duration-300 ${!isEnglish
                                     ? 'bg-white text-slate-800 shadow-sm border border-slate-200/50 cursor-default'
                                     : 'text-slate-400 hover:text-slate-600 cursor-pointer'
                                     }`}
@@ -83,8 +88,8 @@ export default function Navbar({ appName }: { appName: string }) {
                             </button>
                             <button
                                 onClick={() => handleLanguageSwitch('en')}
-                                disabled={isEnglish} // Disable klik jika sudah di posisi EN
-                                className={`flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-extrabold rounded-full transition-all duration-300 ${isEnglish
+                                disabled={isEnglish}
+                                className={`flex items-center gap-1.5 px-2 py-1 md:px-3 md:py-1.5 text-[9px] md:text-[10px] font-extrabold rounded-full transition-all duration-300 ${isEnglish
                                     ? 'bg-white text-slate-800 shadow-sm border border-slate-200/50 cursor-default'
                                     : 'text-slate-400 hover:text-slate-600 cursor-pointer'
                                     }`}
@@ -96,11 +101,12 @@ export default function Navbar({ appName }: { appName: string }) {
                         {/* Spotlight Search */}
                         <button
                             onClick={() => setIsCommandOpen(true)}
-                            className="flex items-center gap-3 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full transition-all group"
+                            // Bentuk tombol pencarian menjadi bulat sempurna (icon-only) di HP, melebar di Desktop
+                            className="flex items-center justify-center gap-2 px-2 py-2 md:px-4 md:py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full transition-all group aspect-square md:aspect-auto"
                         >
                             <Search
                                 size={16}
-                                className="text-slate-400 group-hover:text-slate-900"
+                                className="text-slate-400 group-hover:text-slate-900 shrink-0"
                             />
                             <span className="text-sm font-medium text-slate-500 hidden sm:inline-block">
                                 Cari...

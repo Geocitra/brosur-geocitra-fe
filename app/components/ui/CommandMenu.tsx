@@ -64,8 +64,10 @@ export default function CommandMenu({
             }
         };
 
-        fetchProducts();
-    }, [isEnglish]); // Dependency array di-update: Trigger ulang jika bahasa berubah
+        if (isOpen) {
+            fetchProducts();
+        }
+    }, [isEnglish, isOpen]); // Optimasi: Fetch hanya ketika modal dibuka untuk menghemat resource
 
     // Keyboard Shortcut Logic
     useEffect(() => {
@@ -87,7 +89,8 @@ export default function CommandMenu({
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4 pointer-events-none">
+                // LOGICAL FIX 1: Responsive Padding Top (Aman untuk On-Screen Keyboard HP)
+                <div className="fixed inset-0 z-100 flex items-start justify-center pt-4 sm:pt-[10vh] md:pt-[20vh] px-4 pointer-events-none">
 
                     {/* Backdrop Blur */}
                     <motion.div
@@ -95,43 +98,48 @@ export default function CommandMenu({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setIsOpen(false)}
-                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-auto"
+                        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm pointer-events-auto"
                     />
 
                     {/* Modal Command Palette */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="relative z-50 w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10 pointer-events-auto"
+                        // LOGICAL FIX 2: Radius lebih membulat di HP, menyesuaikan estetika mobile OS
+                        className="relative z-50 w-full max-w-2xl overflow-hidden rounded-xl md:rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10 pointer-events-auto"
                     >
                         <Command className="flex w-full flex-col bg-transparent">
                             {/* Input Area */}
-                            <div className="flex items-center border-b border-slate-100 px-4">
-                                <Search className="mr-3 h-5 w-5 text-slate-400" />
+                            <div className="flex items-center border-b border-slate-100 px-3 md:px-4">
+                                <Search className="mr-2 md:mr-3 h-4 w-4 md:h-5 md:w-5 text-slate-400 shrink-0" />
                                 <Command.Input
                                     autoFocus
                                     placeholder={t.placeholder}
-                                    className="flex h-16 w-full bg-transparent outline-none placeholder:text-slate-400 text-slate-900 font-medium text-lg"
+                                    // LOGICAL FIX 3: Tinggi dan ukuran font input yang responsif (Teks min 16px di iOS agar tidak auto-zoom)
+                                    className="flex h-14 md:h-16 w-full bg-transparent outline-none placeholder:text-slate-400 text-slate-900 font-medium text-base md:text-lg"
                                 />
                                 <button
                                     onClick={() => setIsOpen(false)}
-                                    className="ml-2 p-1.5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors"
+                                    // LOGICAL FIX 4: Target sentuh lebih besar (p-2) di HP untuk X button
+                                    className="ml-2 p-2 md:p-1.5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                                    aria-label="Close menu"
                                 >
-                                    <X size={16} />
+                                    <X size={18} className="md:w-4 md:h-4" />
                                 </button>
                             </div>
 
                             {/* List Area */}
-                            <Command.List className="max-h-87.5 overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
-                                <Command.Empty className="py-12 text-center text-slate-500">
-                                    <p className="font-medium text-lg">{t.emptyTitle}</p>
-                                    <p className="text-sm mt-1">{t.emptyDesc}</p>
+                            {/* LOGICAL FIX 5: Viewport height adaptif agar hasil tidak meluap keluar layar HP */}
+                            <Command.List className="max-h-[50vh] md:max-h-[60vh] lg:max-h-100 overflow-y-auto overflow-x-hidden p-2 md:p-3 custom-scrollbar">
+                                <Command.Empty className="py-10 md:py-12 text-center text-slate-500">
+                                    <p className="font-medium text-base md:text-lg">{t.emptyTitle}</p>
+                                    <p className="text-xs md:text-sm mt-1">{t.emptyDesc}</p>
                                 </Command.Empty>
 
                                 {/* Ekosistem Aplikasi Dinamis (Sorted ASC & Localized) */}
-                                <Command.Group heading={t.catalogHeading} className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <Command.Group heading={t.catalogHeading} className="px-1 md:px-2 py-2 md:py-3 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     {isLoading ? (
                                         <div className="flex justify-center items-center py-6">
                                             <Loader2 className="animate-spin text-slate-300" size={24} />
@@ -141,23 +149,23 @@ export default function CommandMenu({
                                             <CommandItem
                                                 key={product.slug}
                                                 onSelect={() => runCommand(() => router.push(`/${product.slug}`))}
-                                                icon={<Box size={20} />}
+                                                icon={<Box className="w-4 h-4 md:w-5 md:h-5" />}
                                                 label={product.name}
                                                 tagline={product.tagline}
                                             />
                                         ))
                                     ) : (
-                                        <Command.Item disabled className="px-4 py-2 text-sm text-slate-500">
+                                        <Command.Item disabled className="px-3 py-2 text-xs md:text-sm text-slate-500">
                                             {t.noData}
                                         </Command.Item>
                                     )}
                                 </Command.Group>
 
                                 {/* Navigasi Global */}
-                                <Command.Group heading={t.navHeading} className="px-2 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <Command.Group heading={t.navHeading} className="px-1 md:px-2 py-2 md:py-3 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <CommandItem
                                         onSelect={() => runCommand(() => router.push(dashboardUrl))}
-                                        icon={<LayoutDashboard size={20} />}
+                                        icon={<LayoutDashboard className="w-4 h-4 md:w-5 md:h-5" />}
                                         label={t.backToDash}
                                     />
                                 </Command.Group>
@@ -188,18 +196,20 @@ function CommandItem({
         <Command.Item
             onSelect={onSelect}
             value={`${label} ${tagline || ''}`}
-            className="flex cursor-pointer items-center rounded-xl px-4 py-3 mt-1 transition-colors
+            // LOGICAL FIX 6: Padding dan border-radius yang responsif untuk item
+            className="flex cursor-pointer items-center rounded-lg md:rounded-xl px-3 py-2.5 md:px-4 md:py-3 mt-1 transition-colors
                        aria-selected:bg-(--primary-color)/10 group"
         >
             <div className="mr-3 transition-colors group-aria-selected:text-(--primary-color) text-slate-400">
                 {icon}
             </div>
             <div className="flex flex-col">
-                <span className="font-bold text-slate-700 group-aria-selected:text-(--primary-color)">
+                {/* Skalabilitas Teks List */}
+                <span className="font-bold text-sm md:text-base text-slate-700 group-aria-selected:text-(--primary-color)">
                     {label}
                 </span>
                 {tagline && (
-                    <span className="text-xs text-slate-500 font-medium line-clamp-1">
+                    <span className="text-[10px] md:text-xs text-slate-500 font-medium line-clamp-1 mt-0.5">
                         {tagline}
                     </span>
                 )}
