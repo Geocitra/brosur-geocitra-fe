@@ -6,6 +6,7 @@ import ProductCarousel from '../components/ui/ProductCarousel';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import Footer from '../components/layout/Footer';
+import TechStack from '../components/ui/TechStack';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +53,8 @@ export default async function EnglishCatalogPage() {
                     <BentoGrid items={englishItems} />
                 </div>
             </div>
+
+            <TechStack />
 
             <Footer />
         </main>

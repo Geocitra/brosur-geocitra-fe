@@ -1,8 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // UBAH: Tambahkan usePathname
+import { usePathname } from 'next/navigation';
 import { ArrowRight, LayoutGrid, Sparkles, FolderKanban } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import Image from 'next/image';
@@ -24,6 +25,24 @@ export default function BentoGrid({ items }: { items: any[] }) {
         available: isEnglish ? "Available" : "Tersedia"
     };
 
+    // List gambar aset yang ada untuk tumpukan acak di kartu featured
+    const existingAssets = [
+        '/assets/digiarch-mockup.png',
+        '/assets/edaily-mockup.png',
+        '/assets/litera-mockup.png',
+        '/assets/rekas-mockup.png'
+    ];
+
+    // 3. Manajemen State Statis untuk Render Awal (Mencegah Hydration Mismatch)
+    // Kita berikan nilai default statis agar SSR dan render pertama Client sama persis
+    const [visualStack, setVisualStack] = useState<string[]>(existingAssets.slice(0, 3));
+
+    // Eksekusi pengacakan hanya setelah DOM siap di sisi browser
+    useEffect(() => {
+        const shuffled = [...existingAssets].sort(() => 0.5 - Math.random()).slice(0, 3);
+        setVisualStack(shuffled);
+    }, []);
+
     if (!items || items.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-32 text-center bg-white rounded-[2.5rem] border border-slate-200 shadow-sm">
@@ -35,20 +54,6 @@ export default function BentoGrid({ items }: { items: any[] }) {
             </div>
         );
     }
-
-    // List gambar aset yang ada untuk tumpukan acak di kartu featured
-    const existingAssets = [
-        '/assets/digiarch-mockup.png',
-        '/assets/edaily-mockup.png',
-        '/assets/litera-mockup.png',
-        '/assets/rekas-mockup.png'
-    ];
-
-    // Mengambil 3 gambar acak yang unik dari list aset
-    const getVisualStack = () => {
-        // Shuffle sederhana dan ambil 3 teratas
-        return [...existingAssets].sort(() => 0.5 - Math.random()).slice(0, 3);
-    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 auto-rows-[280px] md:auto-rows-[320px]">
@@ -119,7 +124,6 @@ export default function BentoGrid({ items }: { items: any[] }) {
                                         href={`/${item.slug}`}
                                         className={cn(
                                             "inline-flex items-center font-black uppercase tracking-wider transition-all duration-300 group/btn bg-slate-50 border border-slate-200 hover:bg-white active:scale-95",
-                                            // [FIX BUTTON] Conditional Padding & Text Size
                                             isFeatured
                                                 ? "gap-3 text-xs px-6 py-3.5 rounded-xl shadow-lg"
                                                 : "gap-1.5 text-[9px] px-4 py-2.5 rounded-lg shadow-sm"
@@ -146,18 +150,17 @@ export default function BentoGrid({ items }: { items: any[] }) {
                                 <div className="flex-1 relative h-full min-h-[300px] md:min-h-full items-center justify-center">
                                     <div className="absolute inset-0 md:-right-20 md:-top-10 md:-bottom-10 h-full w-[120%] flex items-center justify-center perspective-1000">
 
-                                        {/* Mengambil 3 gambar acak */}
-                                        {getVisualStack().map((path, index) => {
-                                            // Definisi rotasi dan translate acak biar berantakan tapi estetik
+                                        {/* Menggunakan visualStack yang aman dari Mismatch */}
+                                        {visualStack.map((path, index) => {
                                             const transforms = [
-                                                "rotate-[-12deg] -translate-x-8 translate-y-6", // Kiri bawah
-                                                "rotate-[8deg] translate-x-12 -translate-y-10 z-20", // Kanan atas (paling depan)
-                                                "rotate-[-2deg] -translate-y-2 z-10", // Tengah (agak belakang)
+                                                "rotate-[-12deg] -translate-x-8 translate-y-6",
+                                                "rotate-[8deg] translate-x-12 -translate-y-10 z-20",
+                                                "rotate-[-2deg] -translate-y-2 z-10",
                                             ];
 
                                             return (
                                                 <motion.div
-                                                    key={index}
+                                                    key={`${path}-${index}`} // Key unik yang reaktif
                                                     initial={{ opacity: 0, y: 40 }}
                                                     whileInView={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: 0.3 + (index * 0.1), duration: 0.8 }}
@@ -170,6 +173,7 @@ export default function BentoGrid({ items }: { items: any[] }) {
                                                         src={path}
                                                         alt="App Preview"
                                                         fill
+                                                        sizes="(max-width: 768px) 240px, 280px" // Resolusi peringatan warning sizes
                                                         className="object-cover"
                                                         priority
                                                     />
