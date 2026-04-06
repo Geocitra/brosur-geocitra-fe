@@ -39,7 +39,7 @@ export default function LanguageSwitcher() {
                 <div className="relative flex items-center bg-slate-950/50 rounded-full p-1 border border-slate-800">
                     {/* Indikator Slider Aktif (Animasi Spring Framer Motion) */}
                     <motion.div
-                        className="absolute w-[36px] h-[28px] bg-sky-500 rounded-full shadow-sm"
+                        className="absolute w-9 h-7 bg-sky-500 rounded-full shadow-sm"
                         layout
                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                         initial={false}
@@ -49,12 +49,12 @@ export default function LanguageSwitcher() {
                     />
 
                     {/* Teks ID */}
-                    <span className={`relative z-10 w-[36px] text-center text-[10px] tracking-wider font-black transition-colors duration-300 ${!isEnglish ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
+                    <span className={`relative z-10 w-9 text-center text-[10px] tracking-wider font-black transition-colors duration-300 ${!isEnglish ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
                         ID
                     </span>
 
                     {/* Teks EN */}
-                    <span className={`relative z-10 w-[36px] text-center text-[10px] tracking-wider font-black transition-colors duration-300 ${isEnglish ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
+                    <span className={`relative z-10 w-9 text-center text-[10px] tracking-wider font-black transition-colors duration-300 ${isEnglish ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
                         EN
                     </span>
                 </div>

@@ -97,7 +97,7 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
             viewport={{ once: true, margin: "-50px" }}
             transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             onMouseMove={handleMouseMove}
-            className="group relative flex flex-col bg-white/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/60 p-8 md:p-10 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)] hover:border-slate-300 hover:-translate-y-1 overflow-hidden h-full min-h-[320px]"
+            className="group relative flex flex-col bg-white/60 backdrop-blur-2xl rounded-[2.5rem] border border-slate-200/60 p-8 md:p-10 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)] hover:border-slate-300 hover:-translate-y-1 overflow-hidden h-full min-h-80"
         >
             <motion.div
                 className="pointer-events-none absolute -inset-px rounded-[2.5rem] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -122,7 +122,7 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
                 </h3>
             </div>
 
-            <div className="relative z-10 mt-auto flex-grow flex flex-col justify-center">
+            <div className="relative z-10 mt-auto grow flex flex-col justify-center">
                 <motion.div
                     variants={{
                         hidden: { opacity: 0 },
@@ -193,7 +193,7 @@ export default function TechStack() {
 
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tighter mb-8 leading-[1.1]">
                         {t.titleLine1} <br className="hidden md:block" />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-600">
+                        <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-500 to-indigo-600">
                             {t.titleLine2}
                         </span>
                     </h2>
