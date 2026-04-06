@@ -47,7 +47,6 @@ export default function HeroBlock({ data }: HeroBlockProps) {
     const ctaText = data.buttonText || 'Lihat Presentasi';
 
     // 4. Logika Ekstraksi Filename
-    // Mengambil nama file murni dari path (misal: '/uploads/brosur.pdf' -> 'brosur.pdf')
     const fileName = targetUrl ? targetUrl.split('/').pop() : '';
 
     const handleNavigateToPreview = () => {
@@ -57,22 +56,23 @@ export default function HeroBlock({ data }: HeroBlockProps) {
     };
 
     return (
-        // Wrapper utama diubah menjadi bg-white bersih untuk kontras tinggi.
-        // overflow-x-clip sangat penting agar efek "bleeding edge" tidak membuat layar bisa di-scroll ke kanan (horizontal scroll issue).
-        <section className="relative w-full overflow-x-clip bg-white pt-24 pb-16 lg:pt-36 lg:pb-32 min-h-[90vh] flex items-center">
+        // REVISI 1: Penggunaan min-h-[100svh] untuk HP agar beradaptasi dengan UI Browser Dinamis, 
+        // dan min-h-[90vh] di Desktop untuk rasio widescreen.
+        <section className="relative w-full overflow-x-clip bg-white pt-28 pb-16 md:pt-36 md:pb-24 lg:pt-40 lg:pb-32 min-h-svh lg:min-h-[90vh] flex items-center">
 
             {/* THE MONOLITH: Identitas Warna Ekstrim (Responsive) */}
+            {/* REVISI 2: Evolusi tinggi dan radius yang mulus dari Mobile -> Tablet -> Desktop */}
             <div
-                className="absolute bottom-0 right-0 w-full h-[45%] md:h-[55%] lg:h-[85%] lg:top-[7.5%] lg:bottom-auto lg:w-[45vw] rounded-t-[3rem] lg:rounded-t-none lg:rounded-l-[5rem] -z-10 overflow-hidden"
+                className="absolute bottom-0 right-0 w-full h-[50%] md:h-[55%] lg:h-[85%] lg:top-[7.5%] lg:bottom-auto lg:w-[45vw] xl:w-[40vw] rounded-t-[2.5rem] md:rounded-t-[3.5rem] lg:rounded-t-none lg:rounded-l-[5rem] -z-10 overflow-hidden"
                 style={{ backgroundColor: 'var(--primary-color)' }}
             >
-                {/* Overlay Premium: Memberikan tekstur pada warna solid agar tidak terlihat seperti template murah */}
+                {/* Overlay Premium: Memberikan tekstur pada warna solid */}
                 <div className="absolute inset-0 bg-linear-to-br from-white/20 to-black/20 mix-blend-overlay" />
-                <div className="absolute -top-[20%] -right-[10%] w-125 h-125 rounded-full bg-white/10 blur-[80px]" />
+                <div className="absolute -top-[20%] -right-[10%] w-[120%] aspect-square rounded-full bg-white/10 blur-[80px]" />
             </div>
 
-            <div className="enterprise-container relative z-10 w-full">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+            <div className="enterprise-container relative z-10 w-full px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-8 items-center">
 
                     {/* LENGAN KIRI: Copywriting Area */}
                     <motion.div
@@ -80,12 +80,13 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
-                        className="flex flex-col text-center lg:text-left items-center lg:items-start z-20 lg:pr-10"
+                        // REVISI 3: Di Tablet (md:), max-w-2xl & mx-auto mencegah baris teks terlalu panjang
+                        className="flex flex-col text-center lg:text-left items-center lg:items-start z-20 md:max-w-2xl md:mx-auto lg:max-w-none lg:mx-0 lg:pr-10"
                     >
                         {/* Eyebrow Label - Tajam & Solid */}
-                        <motion.div variants={itemVariants} className="mb-6">
+                        <motion.div variants={itemVariants} className="mb-5 md:mb-6">
                             <span
-                                className="inline-flex items-center px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-sm font-extrabold tracking-widest uppercase"
+                                className="inline-flex items-center px-3 sm:px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs sm:text-sm font-extrabold tracking-widest uppercase shadow-sm"
                                 style={{ color: 'var(--primary-color)' }}
                             >
                                 <span className="w-2 h-2 rounded-full mr-2 animate-pulse" style={{ backgroundColor: 'var(--primary-color)' }} />
@@ -93,10 +94,11 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                             </span>
                         </motion.div>
 
-                        {/* Headline: Tidak lagi pakai gradient kompleks, pure Black/Slate pekat agar kontras dengan warna primary */}
+                        {/* Headline: Resolusi Tipografi Bertahap */}
                         <motion.h1
                             variants={itemVariants}
-                            className="text-(length:--fluid-h1) font-black tracking-tighter leading-[1.05] mb-6 text-slate-900"
+                            // REVISI 4: Menggunakan standard tailwind classes agar 100% responsif tanpa bergantung pada custom fluid properties yang berisiko patah di browser tertentu
+                            className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black tracking-tighter leading-[1.1] mb-5 md:mb-6 text-slate-900"
                         >
                             {data.title}
                         </motion.h1>
@@ -104,32 +106,32 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                         {/* Description */}
                         <motion.p
                             variants={itemVariants}
-                            className="text-(length:--fluid-p) leading-relaxed max-w-xl mb-10 text-slate-600 font-medium"
+                            className="text-base sm:text-lg md:text-xl leading-relaxed max-w-xl mb-8 md:mb-10 text-slate-600 font-medium px-4 sm:px-0"
                         >
                             {data.description}
                         </motion.p>
 
                         {/* CTA Button */}
-                        <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                        <motion.div variants={itemVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start w-full sm:w-auto">
                             {targetUrl ? (
                                 <button
-                                    // Event onClick sekarang memicu navigasi ke halaman viewer
                                     onClick={handleNavigateToPreview}
-                                    className="group relative flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-95 overflow-hidden min-h-14 cursor-pointer"
+                                    // REVISI 5: Target sentuh dioptimalkan untuk jari di Mobile (w-full sm:w-auto)
+                                    className="group relative flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl active:scale-95 overflow-hidden cursor-pointer"
                                     style={{ backgroundColor: 'var(--primary-color)' }}
                                 >
-                                    <span className="relative z-10">{ctaText}</span>
-                                    <ArrowRight size={20} className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
+                                    <span className="relative z-10 text-sm sm:text-base">{ctaText}</span>
+                                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
                                     <div className="absolute inset-0 w-full h-full bg-white/20 scale-0 rounded-full transition-transform duration-500 group-hover:scale-150 origin-center" />
                                 </button>
                             ) : (
                                 <button
                                     onClick={() => alert("Dokumen brosur belum tersedia untuk produk ini.")}
-                                    className="group relative flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white transition-all duration-300 opacity-50 cursor-not-allowed min-h-14"
+                                    className="group relative flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-white transition-all duration-300 opacity-50 cursor-not-allowed"
                                     style={{ backgroundColor: 'var(--primary-color)' }}
                                 >
-                                    <span className="relative z-10">{ctaText}</span>
-                                    <ArrowRight size={20} className="relative z-10" />
+                                    <span className="relative z-10 text-sm sm:text-base">{ctaText}</span>
+                                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                                 </button>
                             )}
                         </motion.div>
@@ -142,22 +144,24 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
-                            className="relative w-[115%] -ml-[7.5%] md:w-full md:ml-0 lg:w-[130%] lg:-mr-[30%] z-20 mt-10 lg:mt-0"
+                            // REVISI 6: Penanganan Ekstrim untuk Sindrome Layar Tanggung (Tablet)
+                            // HP: w-[110%] keluar batas sedikit.
+                            // Tablet (md): w-[80%] mx-auto -> Tidak menjadi raksasa, tetap elegan di tengah monolith.
+                            // Desktop (lg/xl): ditarik keluar layar kanan secara progresif.
+                            className="relative w-[110%] -ml-[5%] sm:w-full sm:ml-0 md:w-[80%] md:mx-auto lg:w-[120%] lg:-mr-[20%] xl:w-[130%] xl:-mr-[30%] z-20 mt-4 md:mt-8 lg:mt-0"
                         >
                             <motion.img
-                                animate={{ y: [0, -20, 0] }}
+                                animate={{ y: [0, -15, 0] }}
                                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                                 src={data.imageUrl}
                                 alt={data.title}
-                                className="w-full h-auto object-contain drop-shadow-[0_35px_35px_rgba(0,0,0,0.35)]"
+                                className="w-full h-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.35)] md:drop-shadow-[0_35px_45px_rgba(0,0,0,0.4)]"
                             />
                         </motion.div>
                     )}
 
                 </div>
             </div>
-
-            {/* Komponen PdfDrawer telah diekstraksi seluruhnya demi kebersihan DOM dan performa */}
         </section>
     );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus, HelpCircle, MessageCircleQuestion } from 'lucide-react';
+import { Plus, Minus, MessageCircleQuestion } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 
 // 1. Definisi Kontrak Data (Strict Interface)
@@ -27,12 +27,14 @@ export default function FaqBlock({ data }: FaqBlockProps) {
     if (!data?.items || data.items.length === 0) return null;
 
     return (
-        // Menggunakan bg-slate-50 agar area FAQ terasa sebagai fondasi/penutup yang solid
-        <section className="py-20 lg:py-32 bg-slate-50 relative z-10 border-t border-slate-200">
-            <div className="enterprise-container">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        // REVISI 1: Eskalasi padding vertikal secara gradual
+        <section className="py-16 md:py-20 lg:py-28 bg-slate-50 relative z-10 border-t border-slate-200">
+            <div className="enterprise-container px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                {/* REVISI 2: Gap grid yang beradaptasi dengan orientasi layar */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16 items-start">
 
                     {/* LENGAN KIRI: Area Konteks & Bantuan */}
+                    {/* Di Tablet (md), ini masih di atas, di Desktop (lg) menjadi kolom kiri */}
                     <div className="lg:col-span-5 lg:sticky lg:top-32">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
@@ -41,20 +43,20 @@ export default function FaqBlock({ data }: FaqBlockProps) {
                             transition={{ duration: 0.6, ease: "easeOut" }}
                         >
                             {/* Eyebrow / Badge */}
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
-                                <MessageCircleQuestion size={16} style={{ color: 'var(--primary-color)' }} />
-                                <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">
+                            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-5 sm:mb-6">
+                                <MessageCircleQuestion className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--primary-color)' }} />
+                                <span className="text-[10px] sm:text-xs font-bold text-slate-700 uppercase tracking-widest">
                                     Pusat Bantuan
                                 </span>
                             </div>
 
-                            {/* Main Headline */}
-                            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter mb-6 leading-[1.1]">
+                            {/* Main Headline - Tipografi dinamis */}
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tighter mb-4 sm:mb-6 leading-[1.15]">
                                 {data.title || 'Pertanyaan Umum'}
                             </h2>
 
                             {/* Copywriting Pendukung */}
-                            <p className="text-slate-600 text-lg font-medium leading-relaxed mb-8 max-w-md">
+                            <p className="text-slate-600 text-base sm:text-lg font-medium leading-relaxed mb-6 sm:mb-8 max-w-md">
                                 Temukan jawaban cepat untuk pertanyaan yang paling sering diajukan mengenai sistem, implementasi, dan layanan kami.
                             </p>
 
@@ -73,7 +75,7 @@ export default function FaqBlock({ data }: FaqBlockProps) {
                     </div>
 
                     {/* LENGAN KANAN: Akordion FAQ (Solid Cards) */}
-                    <div className="lg:col-span-7 space-y-4">
+                    <div className="lg:col-span-7 space-y-3 sm:space-y-4">
                         {data.items.map((item, idx) => {
                             const isActive = activeIndex === idx;
 
@@ -85,8 +87,7 @@ export default function FaqBlock({ data }: FaqBlockProps) {
                                     viewport={{ once: true, margin: "-50px" }}
                                     transition={{ delay: idx * 0.1, duration: 0.5 }}
                                     className={cn(
-                                        // Menghapus glass-panel, beralih ke desain kartu (Card Design) murni
-                                        "overflow-hidden rounded-2xl transition-all duration-300 bg-white",
+                                        "overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 bg-white",
                                         isActive
                                             ? "shadow-[0_15px_30px_rgba(0,0,0,0.08)] ring-1"
                                             : "border border-slate-200 hover:border-slate-300 shadow-sm"
@@ -96,29 +97,33 @@ export default function FaqBlock({ data }: FaqBlockProps) {
                                 >
                                     <button
                                         onClick={() => setActiveIndex(isActive ? null : idx)}
-                                        className="w-full flex items-center justify-between p-6 md:p-8 text-left focus:outline-none group cursor-pointer"
+                                        // REVISI 3: Target padding yang membesar sesuai breakpoint layar
+                                        className="w-full flex items-start sm:items-center justify-between p-5 sm:p-6 lg:p-8 text-left focus:outline-none group cursor-pointer gap-4"
                                     >
                                         {/* Pertanyaan */}
                                         <span
                                             className={cn(
-                                                "text-lg md:text-xl font-bold transition-colors duration-300 pr-6",
+                                                "text-base sm:text-lg lg:text-xl font-bold transition-colors duration-300 pt-0.5 sm:pt-0",
                                                 isActive ? "text-slate-900" : "text-slate-700 group-hover:text-slate-900"
                                             )}
                                         >
                                             {item.q}
                                         </span>
 
-                                        {/* Icon Plus/Minus: Tegas & Responsif */}
+                                        {/* Icon Plus/Minus: Skalabilitas ukuran kotak ikon */}
                                         <div
                                             className={cn(
-                                                "w-10 h-10 shrink-0 rounded-full flex items-center justify-center transition-all duration-300 border",
+                                                "w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 shrink-0 rounded-full flex items-center justify-center transition-all duration-300 border",
                                                 isActive
                                                     ? "text-white border-transparent rotate-180"
                                                     : "bg-slate-50 border-slate-200 text-slate-500 group-hover:bg-slate-100"
                                             )}
                                             style={isActive ? { backgroundColor: 'var(--primary-color)' } : {}}
                                         >
-                                            {isActive ? <Minus size={20} /> : <Plus size={20} />}
+                                            {isActive
+                                                ? <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
+                                                : <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
+                                            }
                                         </div>
                                     </button>
 
@@ -131,7 +136,8 @@ export default function FaqBlock({ data }: FaqBlockProps) {
                                                 exit={{ height: 0, opacity: 0 }}
                                                 transition={{ duration: 0.35, ease: [0.21, 0.47, 0.32, 0.98] }}
                                             >
-                                                <div className="px-6 md:px-8 pb-8 text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+                                                {/* REVISI 4: Proporsi spasi internal teks jawaban */}
+                                                <div className="px-5 sm:px-6 lg:px-8 pb-5 sm:pb-6 lg:pb-8 text-slate-600 text-sm sm:text-base lg:text-lg leading-relaxed font-medium">
                                                     {item.a}
                                                 </div>
                                             </motion.div>
