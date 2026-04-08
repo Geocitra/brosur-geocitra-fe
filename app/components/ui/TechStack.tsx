@@ -10,7 +10,7 @@ import { TECH_STACK_DATA, TechCategory, TechItem } from '@/app/lib/constants/tec
 const TechIcon = ({ tech, index }: { tech: TechItem; index: number }) => {
     const [isActive, setIsActive] = useState(false);
 
-    // Physics-based mouse tracking untuk Tooltip
+    // Physics-based mouse tracking
     const mouseX = useMotionValue(0);
     const springConfig = { damping: 20, stiffness: 300 };
     const springX = useSpring(mouseX, springConfig);
@@ -20,7 +20,6 @@ const TechIcon = ({ tech, index }: { tech: TechItem; index: number }) => {
         mouseX.set(e.clientX - rect.left - rect.width / 2);
     };
 
-    // LOGIKA MOSAIC: Offset vertikal dinamis (Rasi Bintang)
     const isEven = index % 2 === 0;
 
     return (
@@ -36,7 +35,6 @@ const TechIcon = ({ tech, index }: { tech: TechItem; index: number }) => {
                     hidden: { opacity: 0, scale: 0.8, y: 10 },
                     visible: { opacity: 1, scale: 1, y: 0 }
                 }}
-                // REVISI 1: Ukuran Ikon & Amplitudo Stagger Responsif (Mengecil di HP, membesar di Desktop)
                 className={cn(
                     "group/tech relative flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(14,165,233,0.15)] hover:border-sky-200 hover:bg-white transition-all duration-300 cursor-pointer",
                     "w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16",
@@ -54,7 +52,6 @@ const TechIcon = ({ tech, index }: { tech: TechItem; index: number }) => {
                 </div>
             </motion.div>
 
-            {/* Smart Floating Tooltip */}
             <AnimatePresence>
                 {isActive && (
                     <motion.div
@@ -82,7 +79,7 @@ const TechIcon = ({ tech, index }: { tech: TechItem; index: number }) => {
 };
 
 // --- SUB-COMPONENT 2: CATEGORY CARD ---
-const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCategory, index: number, coreTechLabel: string }) => {
+const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category: TechCategory, index: number, coreTechLabel: string, isWide?: boolean }) => {
     const Icon = category.icon;
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
@@ -101,8 +98,11 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
             viewport={{ once: true, margin: "-50px" }}
             transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             onMouseMove={handleMouseMove}
-            // REVISI 2: Padding internal dikurangi secara bertahap agar tidak sesak di iPad (md:p-8, lg:p-10)
-            className="group relative flex flex-col bg-white/60 backdrop-blur-2xl rounded-4xl lg:rounded-[2.5rem] border border-slate-200/60 p-6 sm:p-8 lg:p-10 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)] hover:border-slate-300 hover:-translate-y-1 overflow-hidden h-full min-h-70 lg:min-h-80"
+            // LOGICAL OVERRIDE: Menerima prop 'isWide' untuk memaksa span 2 kolom jika kondisi terpenuhi
+            className={cn(
+                "group relative flex flex-col bg-white/60 backdrop-blur-2xl rounded-4xl lg:rounded-[2.5rem] border border-slate-200/60 p-6 sm:p-8 lg:p-10 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)] hover:border-slate-300 hover:-translate-y-1 overflow-hidden h-full min-h-70 lg:min-h-80",
+                isWide ? "md:col-span-2 md:flex-row md:items-center md:gap-12" : ""
+            )}
         >
             <motion.div
                 className="pointer-events-none absolute -inset-px rounded-4xl lg:rounded-[2.5rem] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -117,16 +117,32 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
                 }}
             />
 
-            <div className="relative z-10 mb-6 lg:mb-8 flex items-center gap-4 lg:gap-5">
-                <div className="inline-flex p-3 lg:p-3.5 bg-slate-100/80 text-slate-700 rounded-xl lg:rounded-2xl border border-slate-200 group-hover:bg-sky-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-sky-500/20 group-hover:-rotate-3 transition-all duration-500 shrink-0">
-                    <Icon className="w-5 h-5 lg:w-6.5 lg:h-6.5" strokeWidth={2.5} />
+            {/* Container Kiri untuk Text (Jika isWide, dia membagi ruang dengan Icon Grid) */}
+            <div className={cn(
+                "relative z-10 flex flex-col",
+                isWide ? "md:w-1/3 shrink-0" : "mb-6 lg:mb-8"
+            )}>
+                <div className="flex items-center gap-4 lg:gap-5 mb-4">
+                    <div className="inline-flex p-3 lg:p-3.5 bg-slate-100/80 text-slate-700 rounded-xl lg:rounded-2xl border border-slate-200 group-hover:bg-sky-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-sky-500/20 group-hover:-rotate-3 transition-all duration-500 shrink-0">
+                        <Icon className="w-5 h-5 lg:w-6.5 lg:h-6.5" strokeWidth={2.5} />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight group-hover:text-sky-600 transition-colors duration-300">
+                        {category.title}
+                    </h3>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight group-hover:text-sky-600 transition-colors duration-300">
-                    {category.title}
-                </h3>
+                {/* Tampilkan deskripsi di mode wide untuk mengisi ruang */}
+                {isWide && (
+                    <p className="hidden md:block text-slate-500 text-sm leading-relaxed mb-6">
+                        {category.description}
+                    </p>
+                )}
             </div>
 
-            <div className="relative z-10 mt-auto grow flex flex-col justify-center">
+            {/* Container Kanan/Bawah untuk Grid Ikon */}
+            <div className={cn(
+                "relative z-10 mt-auto grow flex flex-col justify-center",
+                isWide ? "md:mt-0" : ""
+            )}>
                 <motion.div
                     variants={{
                         hidden: { opacity: 0 },
@@ -135,8 +151,10 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
-                    // REVISI 3: Gap mosaik fleksibel. Lebih rapat di HP/Tablet agar wrapping tetap rapi, merenggang di Desktop.
-                    className="flex flex-wrap justify-center content-center gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 lg:gap-x-5 lg:gap-y-8 py-4 lg:py-6"
+                    className={cn(
+                        "flex flex-wrap content-center gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 py-4 lg:py-6",
+                        isWide ? "justify-start md:justify-center lg:gap-x-6" : "justify-center lg:gap-x-5 lg:gap-y-8"
+                    )}
                 >
                     {category.items.map((tech, i) => (
                         <TechIcon key={tech.name} tech={tech} index={i} />
@@ -144,7 +162,10 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
                 </motion.div>
             </div>
 
-            <div className="mt-6 lg:mt-8 pt-5 lg:pt-6 border-t border-slate-100/80 flex items-center justify-between opacity-50 group-hover:opacity-100 transition-opacity duration-300 relative z-10">
+            <div className={cn(
+                "mt-6 lg:mt-8 pt-5 lg:pt-6 border-t border-slate-100/80 flex items-center justify-between opacity-50 group-hover:opacity-100 transition-opacity duration-300 relative z-10",
+                isWide ? "md:absolute md:bottom-8 md:left-10 md:right-10 md:w-[calc(100%-5rem)] md:mt-0" : ""
+            )}>
                 <span className="text-[9px] sm:text-[10.5px] font-black uppercase tracking-widest text-slate-400">
                     {category.items.length} {coreTechLabel}
                 </span>
@@ -154,7 +175,7 @@ const TechCategoryCard = ({ category, index, coreTechLabel }: { category: TechCa
     );
 };
 
-// Utility function untuk join classes
+// Utility function
 const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
 
 // --- MAIN COMPONENT ---
@@ -173,7 +194,6 @@ export default function TechStack() {
     };
 
     return (
-        // REVISI 4: Skalabilitas ruang vertikal (Padding section beradaptasi)
         <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 bg-[#f8fafc] overflow-hidden" id="tech-stack">
             <div
                 className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none"
@@ -198,7 +218,6 @@ export default function TechStack() {
                         </span>
                     </motion.div>
 
-                    {/* REVISI 5: Tipografi dinamis yang tidak merobek kontainer di layar HP */}
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tighter mb-4 sm:mb-6 lg:mb-8 leading-[1.15]">
                         {t.titleLine1} <br className="hidden sm:block" />
                         <span className="text-transparent bg-clip-text bg-linear-to-r from-sky-500 to-indigo-600">
@@ -212,14 +231,22 @@ export default function TechStack() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 xl:gap-8 auto-rows-fr">
-                    {TECH_STACK_DATA.map((category, idx) => (
-                        <TechCategoryCard
-                            key={category.title}
-                            category={category as TechCategory}
-                            index={idx}
-                            coreTechLabel={t.coreTech}
-                        />
-                    ))}
+                    {TECH_STACK_DATA.map((category, idx) => {
+                        // LOGICAL ALGORITHM: Jika total elemen ganjil, paksa elemen terakhir membentang 2 kolom.
+                        const isOddTotal = TECH_STACK_DATA.length % 2 !== 0;
+                        const isLastItem = idx === TECH_STACK_DATA.length - 1;
+                        const forceWideCard = isOddTotal && isLastItem;
+
+                        return (
+                            <TechCategoryCard
+                                key={category.title}
+                                category={category}
+                                index={idx}
+                                coreTechLabel={t.coreTech}
+                                isWide={forceWideCard}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         </section>

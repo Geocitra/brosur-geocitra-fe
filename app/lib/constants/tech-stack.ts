@@ -1,6 +1,5 @@
-// app/lib/constants/tech-stack.ts
 import { ElementType } from 'react';
-import { MonitorSmartphone, Server, Database, Cpu } from 'lucide-react';
+import { MonitorSmartphone, Server, Database, Cpu, Workflow } from 'lucide-react';
 
 export interface TechItem {
     name: string;
@@ -60,6 +59,26 @@ export const TECH_STACK_DATA: TechCategory[] = [
             { name: 'Ubuntu', iconPath: '/assets/tech stack/ubuntu.png' },
             { name: 'NGINX', iconPath: '/assets/tech stack/nginx.png' },
             { name: 'Docker', iconPath: '/assets/tech stack/docker.png' },
+        ],
+    },
+    // LOGICAL UPDATE: Kategori "Hero" untuk Integrated Systems (9 Items)
+    {
+        title: 'AI, RTC & Integrations',
+        icon: Workflow,
+        description: 'Pemrosesan kecerdasan buatan, telekomunikasi real-time, dan gateway pembayaran presisi tinggi.',
+        items: [
+            // Blok AI / ML
+            { name: 'OpenAI API', iconPath: '/assets/tech stack/openai.png' },
+            { name: 'Anthropic Claude', iconPath: '/assets/tech stack/anthropic.png' },
+            { name: 'Google Vertex AI', iconPath: '/assets/tech stack/vertex.png' },
+            { name: 'TensorFlow', iconPath: '/assets/tech stack/tensorflow.png' },
+            // Blok RTC (Real-Time Comm)
+            { name: 'WebRTC', iconPath: '/assets/tech stack/webrtc.png' },
+            { name: 'Socket.io', iconPath: '/assets/tech stack/socketio.png' },
+            // Blok Payment Gateway
+            { name: 'Midtrans', iconPath: '/assets/tech stack/midtrans.png' },
+            { name: 'Xendit', iconPath: '/assets/tech stack/xendit.png' },
+            { name: 'iPaymu', iconPath: '/assets/tech stack/ipaymu.png' },
         ],
     },
 ];
