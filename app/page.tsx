@@ -3,10 +3,13 @@ import BentoGrid from './components/BentoGrid';
 import AuraBackground from './components/ui/AuraBackground';
 import HeroContent from './components/layout/HeroContent';
 import ProductCarousel from './components/ui/ProductCarousel';
-import Image from 'next/image';
 import TechStack from './components/ui/TechStack';
 import Footer from '@/app/components/layout/Footer';
 import LanguageSwitcher from './components/ui/LanguageSwitcher';
+
+// --- IMPORT KOMPONEN BARU ---
+import IntegratedSystemBlock from './components/blocks/IntegratedSystemBlock';
+import AcademyBlock from './components/blocks/AcademyBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +44,7 @@ export default async function CatalogPage() {
     >
 
       <LanguageSwitcher />
-      
+
       {/* 1. SOLID DARK HERO */}
       <section className="relative w-full bg-slate-950 pt-16 pb-24 md:pt-24 md:pb-32 border-b-4 border-(--primary-color)">
         <div className="enterprise-container relative z-10">
@@ -55,7 +58,7 @@ export default async function CatalogPage() {
         </div>
       </section>
 
-      {/* 2. CATALOG AREA */}
+      {/* 2. CATALOG AREA (Katalog Aplikasi) */}
       <div id="catalog-grid" className="relative grow scroll-mt-20">
         <div className="opacity-20"><AuraBackground /></div>
         <div className="enterprise-container relative z-10 pt-20 pb-32 px-2">
@@ -64,9 +67,19 @@ export default async function CatalogPage() {
         </div>
       </div>
 
+      {/* 3. INTEGRATED SYSTEM SUPPORT */}
+      {/* Berfungsi sebagai transisi infrastruktur sebelum masuk ke pilar SDM */}
+      <IntegratedSystemBlock />
+
+      {/* 4. XGREEN DEV ACADEMY */}
+      {/* Berfungsi sebagai funnel konversi berbasis edukasi/mentorship */}
+      <AcademyBlock />
+
+      {/* 5. TECH STACK */}
+      {/* Menjadi fondasi validasi teknis bagi seluruh pilar di atas */}
       <TechStack />
 
-      {/* 3. SOLID TERMINAL FOOTER (Clean & Monochrome) */}
+      {/* 6. SOLID TERMINAL FOOTER (Clean & Monochrome) */}
       <Footer />
     </main>
   );
