@@ -41,7 +41,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+                <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-6">
                     {/* Backdrop Blur */}
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -57,7 +57,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
-                        className="relative w-full max-w-lg bg-white rounded-[2rem] shadow-2xl overflow-hidden"
+                        className="relative w-full max-w-lg bg-white rounded-4xl shadow-2xl overflow-hidden"
                     >
                         {/* Header Area */}
                         <div className="relative bg-emerald-50 px-8 py-8 border-b border-emerald-100 text-center">

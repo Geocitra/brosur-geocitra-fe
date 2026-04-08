@@ -32,8 +32,8 @@ export default function AcademyBlock() {
         <section className="relative py-28 bg-white overflow-hidden">
             {/* LAYER BACKGROUND */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-linear-to-bl from-emerald-50/80 via-green-50/40 to-transparent rounded-full blur-[120px] -translate-y-1/4 translate-x-1/4" />
-                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-linear-to-tr from-slate-50 to-transparent rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4" />
+                <div className="absolute top-0 right-0 w-200 h-200 bg-linear-to-bl from-emerald-50/80 via-green-50/40 to-transparent rounded-full blur-[120px] -translate-y-1/4 translate-x-1/4" />
+                <div className="absolute bottom-0 left-0 w-150 h-150 bg-linear-to-tr from-slate-50 to-transparent rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4" />
             </div>
 
             <div className="enterprise-container relative z-10 px-4 md:px-8 max-w-7xl mx-auto">
@@ -137,13 +137,13 @@ export default function AcademyBlock() {
                         transition={{ delay: 0.3, type: "spring", stiffness: 80 }}
                         className="lg:col-span-5 relative hidden lg:block"
                     >
-                        <div className="relative w-full aspect-[4/5] mx-auto max-w-md group">
+                        <div className="relative w-full aspect-4/5 mx-auto max-w-md group">
 
                             {/* Accent Background Card */}
                             <div className="absolute inset-0 bg-linear-to-tr from-emerald-500 to-teal-400 rounded-[2.5rem] rotate-3 scale-105 group-hover:rotate-6 transition-transform duration-500 opacity-90 shadow-2xl shadow-emerald-500/20" />
 
                             {/* Main Image Frame (Memanfaatkan WhatsApp Image yang diupload) */}
-                            <div className="relative h-full w-full rounded-[2rem] overflow-hidden border-8 border-white bg-slate-100 z-10 shadow-lg flex items-center justify-center">
+                            <div className="relative h-full w-full rounded-4xl overflow-hidden border-8 border-white bg-slate-100 z-10 shadow-lg flex items-center justify-center">
                                 {/* Ganti /assets/academy-photo.jpeg dengan path foto WhatsApp yang Anda simpan */}
                                 <Image
                                     src="/assets/dev1.jpeg"
