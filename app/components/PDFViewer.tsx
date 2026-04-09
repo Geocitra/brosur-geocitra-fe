@@ -33,9 +33,17 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
     const pdfUrl = `${baseUrl}/uploads/${filename}`;
     const themeColor = '#0ea5e9';
 
-    // Logika ekstraksi URL routing
+    // Logika ekstraksi URL routing yang sudah diperbarui
     const returnPath = useMemo(() => {
-        let cleanName = filename.toLowerCase();
+        const cleanFilename = filename.toLowerCase();
+
+        // KONDISI BARU: Jika file adalah xgreen-dev-academy.pdf, kembalikan ke landing page ("/")
+        if (cleanFilename === 'xgreen-dev-academy.pdf') {
+            return '/';
+        }
+
+        // Logika default untuk file lainnya
+        let cleanName = cleanFilename;
         cleanName = cleanName.replace('.pdf', '');
         cleanName = cleanName.replace('brosur-', '');
         return `/${cleanName}`;
