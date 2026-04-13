@@ -101,7 +101,7 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
                             width={130}
                             height={32}
                             className="object-contain hidden md:block"
-                            style={{ width: 'auto', height: 'auto' }}
+                            style={{ width: 'auto', height: 'auto', filter: 'invert(1)' }}
                             priority
                         />
                     </div>
