@@ -2,13 +2,12 @@
 
 import { motion, Variants } from 'framer-motion';
 import { CreditCard, Video, Sparkles, Server } from 'lucide-react';
-import { useParams } from 'next/navigation'; // Tambah impor params
+import { usePathname } from 'next/navigation'; // Tambah impor params
 
 export default function IntegratedSystemBlock() {
     // 1. Logika Deteksi Bahasa
-    const params = useParams();
-    const slug = typeof params?.slug === 'string' ? params.slug : '';
-    const isEnglish = slug.endsWith('en');
+    const pathname = usePathname() || '';
+    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
 
     // 2. Kamus Translasi Konten Statis
     const t = {

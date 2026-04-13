@@ -4,16 +4,14 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Target, Users, Rocket, FileText, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation'; // Tambahkan ini
+import { usePathname } from 'next/navigation'; // Tambahkan ini
 import ContactModal from '../ui/ContactModal';
 
 export default function AcademyBlock() {
     const [isContactOpen, setIsContactOpen] = useState(false);
 
-    // 1. Logika Deteksi Bahasa (Mengikuti pola yang Anda pelajari)
-    const params = useParams();
-    const slug = typeof params?.slug === 'string' ? params.slug : '';
-    const isEnglish = slug.endsWith('en');
+    const pathname = usePathname() || '';
+    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
 
     // 2. Kamus Translasi untuk Konten Statis
     const t = {
