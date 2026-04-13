@@ -4,29 +4,57 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Target, Users, Rocket, FileText, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation'; // Tambahkan ini
 import ContactModal from '../ui/ContactModal';
-
-// LOGICAL UPDATE: Teks disesuaikan persis dengan Halaman 4 Dokumen PDF
-const academyFeatures = [
-    {
-        icon: <Target className="w-6 h-6 text-emerald-600" />,
-        title: "Project-Based Learning",
-        description: "Belajar dengan membangun aplikasi nyata yang dapat langsung digunakan."
-    },
-    {
-        icon: <Users className="w-6 h-6 text-emerald-600" />,
-        title: "Industry Mentorship",
-        description: "Dibimbing langsung oleh developer aktif yang berpengalaman di industri."
-    },
-    {
-        icon: <Rocket className="w-6 h-6 text-emerald-600" />,
-        title: "Outcome-Oriented",
-        description: "Hasil berupa aplikasi & portfolio digital siap pakai."
-    }
-];
 
 export default function AcademyBlock() {
     const [isContactOpen, setIsContactOpen] = useState(false);
+
+    // 1. Logika Deteksi Bahasa (Mengikuti pola yang Anda pelajari)
+    const params = useParams();
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
+
+    // 2. Kamus Translasi untuk Konten Statis
+    const t = {
+        badge: "XGreen Dev Academy",
+        titlePrefix: isEnglish ? "Learning by" : "Learning by",
+        titleHighlight: isEnglish ? "Building Real Apps." : "Building Real Apps.",
+        description: isEnglish
+            ? "Bridging the competency gap between graduates and industry standards. We produce work-ready IT talent through hands-on practical training, not just theory."
+            : "Menjembatani kesenjangan kompetensi lulusan dengan standar industri. Kami mencetak talenta IT siap kerja melalui pelatihan berbasis praktik langsung, bukan sekadar teori.",
+        btnPdf: isEnglish ? "View PDF" : "Lihat Pdf",
+        btnRegister: isEnglish ? "Register Batch Now" : "Daftar Batch Sekarang",
+        badgeTargetLabel: isEnglish ? "Graduate Target" : "Target Lulusan",
+        badgeTargetValue: isEnglish ? "Work-Ready Talent" : "Talenta Siap Kerja",
+        badgeQuotaLabel: isEnglish ? "Limited Quota" : "Kuota Terbatas",
+        badgeQuotaValue: isEnglish ? "Max per Batch" : "Maksimal per Batch",
+    };
+
+    // 3. Data Features Dinamis Berdasarkan Bahasa
+    const academyFeatures = [
+        {
+            icon: <Target className="w-6 h-6 text-emerald-600" />,
+            title: isEnglish ? "Project-Based Learning" : "Project-Based Learning",
+            description: isEnglish
+                ? "Learn by building real applications that can be used immediately."
+                : "Belajar dengan membangun aplikasi nyata yang dapat langsung digunakan."
+        },
+        {
+            icon: <Users className="w-6 h-6 text-emerald-600" />,
+            title: isEnglish ? "Industry Mentorship" : "Industry Mentorship",
+            description: isEnglish
+                ? "Guided directly by active developers experienced in the industry."
+                : "Dibimbing langsung oleh developer aktif yang berpengalaman di industri."
+        },
+        {
+            icon: <Rocket className="w-6 h-6 text-emerald-600" />,
+            title: isEnglish ? "Outcome-Oriented" : "Outcome-Oriented",
+            description: isEnglish
+                ? "Results in the form of ready-to-use applications & digital portfolios."
+                : "Hasil berupa aplikasi & portfolio digital siap pakai."
+        }
+    ];
 
     return (
         <section className="relative py-28 bg-white overflow-hidden">
@@ -39,7 +67,7 @@ export default function AcademyBlock() {
             <div className="enterprise-container relative z-10 px-4 md:px-8 max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
 
-                    {/* KOLOM KIRI - Value Proposition & Copywriting */}
+                    {/* KOLOM KIRI */}
                     <div className="lg:col-span-7 space-y-10">
 
                         <motion.div
@@ -51,7 +79,7 @@ export default function AcademyBlock() {
                             <div className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-600">
                                 <Zap className="w-3.5 h-3.5 fill-current animate-pulse" />
                             </div>
-                            <span className="text-sm font-bold text-emerald-800 uppercase tracking-widest">XGreen Dev Academy</span>
+                            <span className="text-sm font-bold text-emerald-800 uppercase tracking-widest">{t.badge}</span>
                         </motion.div>
 
                         <motion.h2
@@ -61,13 +89,12 @@ export default function AcademyBlock() {
                             transition={{ delay: 0.1 }}
                             className="text-4xl md:text-5xl lg:text-[4rem] font-extrabold text-slate-950 leading-[1.1] tracking-tight"
                         >
-                            Learning by <br className="hidden md:block" />
+                            {t.titlePrefix} <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-teal-400">
-                                Building Real Apps.
+                                {t.titleHighlight}
                             </span>
                         </motion.h2>
 
-                        {/* LOGICAL UPDATE: Disesuaikan dengan Halaman 2 & 3 PDF (Latar Belakang & Tujuan) */}
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -75,10 +102,10 @@ export default function AcademyBlock() {
                             transition={{ delay: 0.2 }}
                             className="text-slate-600 text-lg md:text-xl max-w-2xl leading-relaxed font-medium"
                         >
-                            Menjembatani kesenjangan kompetensi lulusan dengan standar industri. Kami mencetak talenta IT siap kerja melalui pelatihan berbasis praktik langsung, bukan sekadar teori.
+                            {t.description}
                         </motion.p>
 
-                        {/* Features Grid */}
+                        {/* Features Grid Dinamis */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             whileInView={{ opacity: 1 }}
@@ -101,7 +128,7 @@ export default function AcademyBlock() {
                             ))}
                         </motion.div>
 
-                        {/* Action Buttons */}
+                        {/* Action Buttons Dinamis */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -116,20 +143,20 @@ export default function AcademyBlock() {
                                 className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-slate-950 text-white rounded-full text-base font-bold shadow-xl shadow-slate-900/20 hover:bg-slate-800 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto group"
                             >
                                 <FileText className="w-5 h-5 text-emerald-400 group-hover:animate-bounce" />
-                                Lihat Pdf
+                                {t.btnPdf}
                             </a>
 
                             <button
                                 onClick={() => setIsContactOpen(true)}
                                 className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-emerald-700 rounded-full text-base font-bold border-2 border-emerald-200 hover:border-emerald-500 hover:bg-emerald-50 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto group cursor-pointer"
                             >
-                                Daftar Batch Sekarang
+                                {t.btnRegister}
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </motion.div>
                     </div>
 
-                    {/* KOLOM KANAN - Dynamic Photo Gallery & Proof */}
+                    {/* KOLOM KANAN */}
                     <motion.div
                         initial={{ opacity: 0, x: 40 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -138,23 +165,19 @@ export default function AcademyBlock() {
                         className="lg:col-span-5 relative hidden lg:block"
                     >
                         <div className="relative w-full aspect-4/5 mx-auto max-w-md group">
-
-                            {/* Accent Background Card */}
                             <div className="absolute inset-0 bg-linear-to-tr from-emerald-500 to-teal-400 rounded-[2.5rem] rotate-3 scale-105 group-hover:rotate-6 transition-transform duration-500 opacity-90 shadow-2xl shadow-emerald-500/20" />
 
-                            {/* Main Image Frame (Memanfaatkan WhatsApp Image yang diupload) */}
                             <div className="relative h-full w-full rounded-4xl overflow-hidden border-8 border-white bg-slate-100 z-10 shadow-lg flex items-center justify-center">
-                                {/* Ganti /assets/academy-photo.jpeg dengan path foto WhatsApp yang Anda simpan */}
                                 <Image
                                     src="/assets/dev1.jpeg"
-                                    alt="Suasana Mentoring XGreen Dev Academy"
+                                    alt="Mentoring Session"
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-linear-to-t from-slate-900/60 via-transparent to-transparent opacity-60" />
                             </div>
 
-                            {/* Floating Trust Badge 1 (Hasil/Outcome) */}
+                            {/* Floating Badges Dinamis */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -166,12 +189,11 @@ export default function AcademyBlock() {
                                     <CheckCircle2 className="w-6 h-6 text-emerald-600" />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Lulusan</p>
-                                    <p className="text-base font-extrabold text-slate-900">Talenta Siap Kerja</p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t.badgeTargetLabel}</p>
+                                    <p className="text-base font-extrabold text-slate-900">{t.badgeTargetValue}</p>
                                 </div>
                             </motion.div>
 
-                            {/* Floating Trust Badge 2 (Kuota Eksklusif dari Hal 12 PDF) */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -183,14 +205,12 @@ export default function AcademyBlock() {
                                     15
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-white">Kuota Terbatas</p>
-                                    <p className="text-xs text-emerald-400">Maksimal per Batch</p>
+                                    <p className="text-sm font-bold text-white">{t.badgeQuotaLabel}</p>
+                                    <p className="text-xs text-emerald-400">{t.badgeQuotaValue}</p>
                                 </div>
                             </motion.div>
-
                         </div>
                     </motion.div>
-
                 </div>
             </div>
             <ContactModal

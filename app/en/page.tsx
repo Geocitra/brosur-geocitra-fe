@@ -8,6 +8,8 @@ import { Metadata } from 'next';
 import Footer from '../components/layout/Footer';
 import TechStack from '../components/ui/TechStack';
 import LanguageSwitcher from '../components/ui/LanguageSwitcher';
+import AcademyBlock from '../components/blocks/AcademyBlock';
+import IntegratedSystemBlock from '../components/blocks/IntegratedSystemBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +40,7 @@ export default async function EnglishCatalogPage() {
         >
 
             <LanguageSwitcher />
-            
+
             {/* 1. SOLID DARK HERO */}
             {/* FIX TAILWIND: border-(--primary-color) */}
             <section className="relative w-full bg-slate-950 pt-16 pb-24 md:pt-24 md:pb-32 border-b-4 border-(--primary-color)">
@@ -58,6 +60,12 @@ export default async function EnglishCatalogPage() {
                     <BentoGrid items={englishItems} />
                 </div>
             </div>
+
+            <IntegratedSystemBlock />
+
+            {/* 4. XGREEN DEV ACADEMY */}
+            {/* Berfungsi sebagai funnel konversi berbasis edukasi/mentorship */}
+            <AcademyBlock />
 
             <TechStack />
 
