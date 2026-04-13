@@ -13,7 +13,7 @@ export default function AcademyBlock() {
     // 1. Logika Deteksi Bahasa (Mengikuti pola yang Anda pelajari)
     const params = useParams();
     const slug = typeof params?.slug === 'string' ? params.slug : '';
-    const isEnglish = slug.endsWith('-en');
+    const isEnglish = slug.endsWith('en');
 
     // 2. Kamus Translasi untuk Konten Statis
     const t = {

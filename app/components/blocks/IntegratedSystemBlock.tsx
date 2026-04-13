@@ -8,7 +8,7 @@ export default function IntegratedSystemBlock() {
     // 1. Logika Deteksi Bahasa
     const params = useParams();
     const slug = typeof params?.slug === 'string' ? params.slug : '';
-    const isEnglish = slug.endsWith('-en');
+    const isEnglish = slug.endsWith('en');
 
     // 2. Kamus Translasi Konten Statis
     const t = {
