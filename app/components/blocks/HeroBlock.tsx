@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 // 1. Definisi antarmuka kontrak data yang ketat (Strict Interface)
@@ -9,8 +9,10 @@ interface HeroData {
     title: string;
     description: string;
     imageUrl?: string;
-    fileUrl?: string;     // URL file brosur/PDF yang didapat dari payload JSON
-    buttonText?: string;  // Teks CTA opsional dari backend
+    fileUrl?: string;
+    buttonText?: string;
+    demoUrl?: string;
+    demoButtonText?: string;
 }
 
 interface HeroBlockProps {
@@ -45,6 +47,8 @@ export default function HeroBlock({ data }: HeroBlockProps) {
     // 3. Ekstraksi Data Aman (Defensive Assignment)
     const targetUrl = data.fileUrl || '';
     const ctaText = data.buttonText || 'Lihat Presentasi';
+    const demoUrl = data.demoUrl || '';
+    const demoCtaText = data.demoButtonText || 'Live Demo';
 
     // 4. Logika Ekstraksi Filename
     const fileName = targetUrl ? targetUrl.split('/').pop() : '';
@@ -133,6 +137,23 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                                     <span className="relative z-10 text-sm sm:text-base">{ctaText}</span>
                                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                                 </button>
+                            )}
+                            {demoUrl && (
+                                <a
+                                    href={demoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group relative flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold transition-all duration-300 border-2 overflow-hidden cursor-pointer shadow-sm hover:shadow-md active:scale-95 bg-white"
+                                    style={{ borderColor: 'var(--primary-color)', color: 'var(--primary-color)' }}
+                                >
+                                    <span className="relative z-10 text-sm sm:text-base">{demoCtaText}</span>
+                                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                                    {/* Efek hover subtle menggunakan opacity dari primary color */}
+                                    <div
+                                        className="absolute inset-0 w-full h-full scale-0 rounded-full transition-transform duration-500 group-hover:scale-150 origin-center opacity-10"
+                                        style={{ backgroundColor: 'var(--primary-color)' }}
+                                    />
+                                </a>
                             )}
                         </motion.div>
                     </motion.div>
