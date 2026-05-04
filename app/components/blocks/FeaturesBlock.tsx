@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import * as Icons from 'lucide-react';
@@ -40,15 +40,6 @@ export default function FeaturesBlock({ data }: FeaturesBlockProps) {
     };
 
     const sectionTitle = data.title || t.defaultTitle;
-
-    // Auto-rotate logic: Berpindah tab setiap 15 detik
-    useEffect(() => {
-        if (!data.features || data.features.length === 0) return;
-        const timer = setInterval(() => {
-            setActiveTab((prev) => (prev + 1) % data.features.length);
-        }, 15000);
-        return () => clearInterval(timer);
-    }, [data.features]);
 
     if (!data.features || data.features.length === 0) return null;
 
