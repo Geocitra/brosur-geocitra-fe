@@ -2,7 +2,7 @@
 
 import { motion, Variants } from 'framer-motion';
 import { CreditCard, Video, Sparkles, Server } from 'lucide-react';
-import { usePathname } from 'next/navigation'; // Tambah impor params
+import { usePathname } from 'next/navigation';
 
 export default function IntegratedSystemBlock() {
     // 1. Logika Deteksi Bahasa
@@ -19,7 +19,7 @@ export default function IntegratedSystemBlock() {
             : "Kami tidak sekadar membuat aplikasi. Kami membangun ekosistem digital yang scalable, aman, dan siap menopang manuver bisnis Anda."
     };
 
-    // 3. Data Sistem Dinamis (Ditaruh di dalam fungsi agar bisa baca isEnglish)
+    // 3. Data Sistem Dinamis
     const systems = [
         {
             title: isEnglish ? "Online Payment" : "Online Payment",
@@ -62,7 +62,7 @@ export default function IntegratedSystemBlock() {
         }
     ];
 
-    // Variants (Tetap sama)
+    // Variants Animasi
     const containerVariants: Variants = {
         hidden: { opacity: 0 },
         show: {
@@ -129,53 +129,90 @@ export default function IntegratedSystemBlock() {
                     </motion.p>
                 </div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 items-start"
-                >
-                    {systems.map((item, index) => (
-                        <motion.div
-                            key={index}
-                            variants={cardVariants}
-                            className={`relative group ${index === 1 ? 'md:-mt-12' : 'mt-0'}`}
-                        >
-                            {index < 2 && (
-                                <div className="hidden md:block absolute top-1/2 -right-8 lg:-right-12 w-8 lg:w-12 h-0.5 bg-linear-to-r from-slate-200 to-transparent translate-y-[-50%] z-0" />
-                            )}
+                {/* =========================================================================
+                    LOGICAL FIX: ABSOLUTE DOM SEPARATION 
+                ========================================================================= */}
 
-                            <div className={`relative z-10 h-full bg-white/80 backdrop-blur-xl p-8 lg:p-10 rounded-[2.5rem] shadow-xl ${item.shadow} border border-slate-100 ${item.borderHover} transition-all duration-500 hover:-translate-y-2 group-hover:bg-white`}>
+                {/* 1. DESKTOP VIEWPORT (>= md): GRID MURNI */}
+                <div className="hidden md:block">
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: "-100px" }}
+                        className="grid grid-cols-3 gap-8 lg:gap-12 items-start"
+                    >
+                        {systems.map((item, index) => (
+                            <motion.div
+                                key={`desktop-${index}`}
+                                variants={cardVariants}
+                                className={`relative group ${index === 1 ? '-mt-12' : 'mt-0'}`}
+                            >
+                                {index < 2 && (
+                                    <div className="absolute top-1/2 -right-8 lg:-right-12 w-8 lg:w-12 h-0.5 bg-linear-to-r from-slate-200 to-transparent translate-y-[-50%] z-0" />
+                                )}
 
-                                <div className="flex items-start justify-between mb-8">
-                                    <div className={`relative flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br ${item.theme} text-white shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500`}>
-                                        <div className="absolute inset-0 bg-white/20 rounded-2xl animate-pulse" />
-                                        <div className="relative z-10">
-                                            {item.icon}
+                                <div className={`relative z-10 h-full bg-white/80 backdrop-blur-xl p-8 lg:p-10 rounded-[2.5rem] shadow-xl ${item.shadow} border border-slate-100 ${item.borderHover} transition-all duration-500 hover:-translate-y-2 group-hover:bg-white`}>
+                                    <div className="flex items-start justify-between mb-8">
+                                        <div className={`relative flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br ${item.theme} text-white shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500`}>
+                                            <div className="absolute inset-0 bg-white/20 rounded-2xl animate-pulse" />
+                                            <div className="relative z-10">{item.icon}</div>
+                                        </div>
+
+                                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${item.bgLight} border border-white/50`}>
+                                            <div className={`w-2 h-2 rounded-full bg-linear-to-r ${item.theme} animate-ping`} style={{ animationDuration: '3s' }} />
+                                            <span className={`text-[11px] font-bold ${item.textColor} uppercase tracking-wider`}>{item.status}</span>
                                         </div>
                                     </div>
 
-                                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${item.bgLight} border border-white/50`}>
-                                        <div className={`w-2 h-2 rounded-full bg-linear-to-r ${item.theme} animate-ping`} style={{ animationDuration: '3s' }} />
-                                        <span className={`text-[11px] font-bold ${item.textColor} uppercase tracking-wider`}>
-                                            {item.status}
-                                        </span>
-                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors">{item.title}</h3>
+                                    <p className="text-slate-500 leading-relaxed font-medium">{item.description}</p>
+
+                                    <div className="absolute bottom-0 left-8 right-8 h-0.75 rounded-t-full bg-linear-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))` }} />
                                 </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </div>
 
-                                <h3 className="text-2xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors">
-                                    {item.title}
-                                </h3>
-                                <p className="text-slate-500 leading-relaxed font-medium">
-                                    {item.description}
-                                </p>
+                {/* 2. MOBILE VIEWPORT (< md): CAROUSEL MURNI (Dynamic Height & Optimized Width) */}
+                <div className="block md:hidden">
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: "-100px" }}
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-4 items-start pb-8 -mx-4 px-4 hide-scrollbar"
+                    >
+                        {systems.map((item, index) => (
+                            <motion.div
+                                key={`mobile-${index}`}
+                                variants={cardVariants}
+                                // Lebar dioptimalkan menjadi 88vw untuk proporsi visual yang pas
+                                className="relative group snap-center shrink-0 w-[88vw] sm:w-[320px] flex flex-col"
+                            >
+                                {/* h-full dicabut agar tinggi bisa auto-fit sesuai konten (Dynamic Height) */}
+                                <div className={`relative z-10 flex flex-col bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-xl ${item.shadow} border border-slate-100 ${item.borderHover} transition-all duration-500`}>
+                                    <div className="flex items-start justify-between mb-8">
+                                        <div className={`relative flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br ${item.theme} text-white shadow-lg`}>
+                                            <div className="absolute inset-0 bg-white/20 rounded-2xl" />
+                                            <div className="relative z-10">{item.icon}</div>
+                                        </div>
 
-                                <div className="absolute bottom-0 left-8 right-8 h-0.75 rounded-t-full bg-linear-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))` }} />
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${item.bgLight} border border-white/50`}>
+                                            <div className={`w-2 h-2 rounded-full bg-linear-to-r ${item.theme}`} />
+                                            <span className={`text-[11px] font-bold ${item.textColor} uppercase tracking-wider`}>{item.status}</span>
+                                        </div>
+                                    </div>
+
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
+                                    <p className="text-slate-500 leading-relaxed font-medium">{item.description}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </div>
+
             </div>
         </section>
     );

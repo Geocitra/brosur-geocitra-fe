@@ -1,8 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/app/lib/utils';
 
@@ -121,6 +122,15 @@ export default function ProductCarousel({ items }: { items: any[] }) {
                                     <p className="text-slate-300 font-bold text-lg mb-10 line-clamp-2 leading-relaxed">
                                         {items[imageIndex].tagline}
                                     </p>
+
+                                    {/* TAMBAHAN LOGIKA UX: Tombol Akses Produk */}
+                                    <Link
+                                        href={`/${items[imageIndex].slug}`}
+                                        className="inline-flex items-center gap-2 bg-(--primary-color) hover:bg-sky-400 text-white px-6 py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs shadow-lg transition-all active:scale-95 w-fit"
+                                    >
+                                        Buka Brosur
+                                        <ArrowRight size={16} strokeWidth={3} />
+                                    </Link>
                                 </motion.div>
                             </div>
                         </div>

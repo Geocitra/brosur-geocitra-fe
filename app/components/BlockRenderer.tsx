@@ -13,7 +13,7 @@ import AdvantagesBlock from './blocks/AdvantagesBlock';
 const blockComponents: { [key: string]: React.ElementType } = {
     HeroBlock: HeroBlock,
     FeaturesBlock: FeaturesBlock,
-    SocialProofBlock: SocialProofBlock, // Mendaftarkan SocialProofBlock ke dalam mesin
+    SocialProofBlock: SocialProofBlock, 
     FaqBlock: FaqBlock,
     VideoBlock: VideoBlock,
     AdvantagesBlock: AdvantagesBlock,   

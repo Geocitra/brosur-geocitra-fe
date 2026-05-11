@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { TECH_STACK_DATA, TechCategory, TechItem } from '@/app/lib/constants/tech-stack';
 
+// Utility function
+const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
+
 // --- SUB-COMPONENT 1: TECH ICON (Interactive Node) ---
 const TechIcon = ({ tech, index }: { tech: TechItem; index: number }) => {
     const [isActive, setIsActive] = useState(false);
@@ -98,9 +101,11 @@ const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category
             viewport={{ once: true, margin: "-50px" }}
             transition={{ delay: index * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             onMouseMove={handleMouseMove}
-            // LOGICAL OVERRIDE: Menerima prop 'isWide' untuk memaksa span 2 kolom jika kondisi terpenuhi
             className={cn(
-                "group relative flex flex-col bg-white/60 backdrop-blur-2xl rounded-4xl lg:rounded-[2.5rem] border border-slate-200/60 p-6 sm:p-8 lg:p-10 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)] hover:border-slate-300 hover:-translate-y-1 overflow-hidden h-full min-h-70 lg:min-h-80",
+                // Base styling
+                "group relative flex flex-col bg-white/60 backdrop-blur-2xl rounded-4xl lg:rounded-[2.5rem] border border-slate-200/60 p-6 sm:p-8 lg:p-10 transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(14,165,233,0.15)] hover:border-slate-300 hover:-translate-y-1 overflow-hidden w-full",
+                // LOGICAL FIX: Height constraint hanya berlaku di mode Desktop (md ke atas). Mobile bebas menyesuaikan konten (auto/h-max).
+                "md:h-full md:min-h-70 lg:min-h-80",
                 isWide ? "md:col-span-2 md:flex-row md:items-center md:gap-12" : ""
             )}
         >
@@ -117,7 +122,6 @@ const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category
                 }}
             />
 
-            {/* Container Kiri untuk Text (Jika isWide, dia membagi ruang dengan Icon Grid) */}
             <div className={cn(
                 "relative z-10 flex flex-col",
                 isWide ? "md:w-1/3 shrink-0" : "mb-6 lg:mb-8"
@@ -130,7 +134,6 @@ const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category
                         {category.title}
                     </h3>
                 </div>
-                {/* Tampilkan deskripsi di mode wide untuk mengisi ruang */}
                 {isWide && (
                     <p className="hidden md:block text-slate-500 text-sm leading-relaxed mb-6">
                         {category.description}
@@ -138,7 +141,6 @@ const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category
                 )}
             </div>
 
-            {/* Container Kanan/Bawah untuk Grid Ikon */}
             <div className={cn(
                 "relative z-10 mt-auto grow flex flex-col justify-center",
                 isWide ? "md:mt-0" : ""
@@ -174,9 +176,6 @@ const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category
         </motion.div>
     );
 };
-
-// Utility function
-const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
 
 // --- MAIN COMPONENT ---
 export default function TechStack() {
@@ -230,24 +229,48 @@ export default function TechStack() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 xl:gap-8 auto-rows-fr">
-                    {TECH_STACK_DATA.map((category, idx) => {
-                        // LOGICAL ALGORITHM: Jika total elemen ganjil, paksa elemen terakhir membentang 2 kolom.
-                        const isOddTotal = TECH_STACK_DATA.length % 2 !== 0;
-                        const isLastItem = idx === TECH_STACK_DATA.length - 1;
-                        const forceWideCard = isOddTotal && isLastItem;
+                {/* 1. DESKTOP VIEWPORT (>= md): GRID MURNI */}
+                <div className="hidden md:block">
+                    <div className="grid grid-cols-2 gap-6 xl:gap-8 auto-rows-fr">
+                        {TECH_STACK_DATA.map((category, idx) => {
+                            const isOddTotal = TECH_STACK_DATA.length % 2 !== 0;
+                            const isLastItem = idx === TECH_STACK_DATA.length - 1;
+                            const forceWideCard = isOddTotal && isLastItem;
 
-                        return (
-                            <TechCategoryCard
-                                key={category.title}
-                                category={category}
-                                index={idx}
-                                coreTechLabel={t.coreTech}
-                                isWide={forceWideCard}
-                            />
-                        );
-                    })}
+                            return (
+                                <TechCategoryCard
+                                    key={`desktop-${category.title}`}
+                                    category={category}
+                                    index={idx}
+                                    coreTechLabel={t.coreTech}
+                                    isWide={forceWideCard}
+                                />
+                            );
+                        })}
+                    </div>
                 </div>
+
+                {/* 2. MOBILE VIEWPORT (< md): CAROUSEL MURNI (Dynamic Height & Optimized Width) */}
+                <div className="block md:hidden">
+                    {/* LOGICAL FIX: items-start mengizinkan kartu membentuk tinggi berdasarkan kontennya masing-masing */}
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 items-start pb-8 -mx-4 px-4 hide-scrollbar">
+                        {TECH_STACK_DATA.map((category, idx) => (
+                            <div
+                                key={`mobile-${category.title}`}
+                                // Lebar 88vw memberikan proporsi layar penuh yang nyaman, menyisakan 12vw untuk kartu berikutnya
+                                className="snap-center shrink-0 w-[88vw] sm:w-[320px] flex flex-col"
+                            >
+                                <TechCategoryCard
+                                    category={category}
+                                    index={idx}
+                                    coreTechLabel={t.coreTech}
+                                    isWide={false}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
             </div>
         </section>
     );
