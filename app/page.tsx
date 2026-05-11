@@ -17,7 +17,6 @@ async function getShowcases() {
     const response = await api.get('/showcase');
     const allItems = response.data?.data || response.data || [];
 
-    // Filter ketat data versi Indonesia
     const indonesianItems = allItems.filter((item: any) => {
       if (!item || !item.slug) return false;
       return !item.slug.endsWith('-en');
@@ -47,8 +46,6 @@ export default async function CatalogPage() {
         <div className="enterprise-container relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <HeroContent />
-
-            {/* Carousel di Hero HANYA untuk Desktop sebagai ornamen visual */}
             <div className="hidden lg:block">
               <ProductCarousel items={items} />
             </div>
@@ -62,9 +59,10 @@ export default async function CatalogPage() {
           <AuraBackground />
         </div>
 
-        <div className="enterprise-container relative z-10 pt-12 md:pt-20 pb-32 px-2 md:px-0">
-
-          {/* --- VIEWPORT SWITCHING LOGIC --- */}
+        {/* LOGICAL FIX: Mengurangi padding-bottom (pb) dari pb-32 menjadi pb-12 pada mobile, 
+            namun tetap pb-32 pada desktop (lg:pb-32).
+        */}
+        <div className="enterprise-container relative z-10 pt-12 md:pt-20 pb-6 lg:pb-32 px-2 md:px-0">
 
           {/* MOBILE & TABLET VIEWPORT (< lg) */}
           <div className="block lg:hidden mt-4">
@@ -72,13 +70,11 @@ export default async function CatalogPage() {
               <h2 className="text-3xl font-black text-slate-900 tracking-tight">Katalog Produk</h2>
               <p className="text-slate-500 mt-2 font-medium">Geser untuk menjelajahi solusi kami</p>
             </div>
-            {/* Render Carousel sebagai navigasi interaktif */}
             <ProductCarousel items={items} />
           </div>
 
           {/* DESKTOP VIEWPORT (>= lg) */}
           <div className="hidden lg:block">
-            {/* Render BentoGrid utuh dengan struktur matriks 8-pola */}
             <BentoGrid items={items} />
           </div>
 
@@ -86,7 +82,12 @@ export default async function CatalogPage() {
       </div>
 
       {/* 3. INTEGRATED SYSTEM SUPPORT */}
-      <IntegratedSystemBlock />
+      {/* Jika jarak masih terasa jauh, kita bisa membungkus komponen ini 
+          dengan div yang memiliki margin-top negatif khusus mobile. 
+      */}
+      <div className="-mt-8 lg:mt-0">
+        <IntegratedSystemBlock />
+      </div>
 
       {/* 4. XGREEN DEV ACADEMY */}
       <AcademyBlock />
