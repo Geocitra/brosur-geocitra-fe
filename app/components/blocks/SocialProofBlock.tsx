@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
+import { useParams } from 'next/navigation';
+
 // 1. Definisi Kontrak Data (Strict Interface)
 interface LogoData {
     name: string;
@@ -19,12 +21,16 @@ interface SocialProofBlockProps {
 }
 
 export default function SocialProofBlock({ data }: SocialProofBlockProps) {
+    const params = useParams();
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
+
     // 2. Defensive Programming: Cegah rendering jika tidak ada data logo (misal API error/kosong)
     if (!data?.logos || data.logos.length === 0) {
         return null;
     }
 
-    const sectionTitle = data.title || 'Telah Dipercaya Oleh';
+    const sectionTitle = data.title || (isEnglish ? 'Trusted By' : 'Telah Dipercaya Oleh');
 
     return (
         // Wrapper Section: Diubah menjadi bg-white murni sesuai permintaan

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/app/lib/utils';
+import { usePathname } from 'next/navigation';
 
 const variants = {
     enter: (direction: number) => ({
@@ -31,6 +32,9 @@ const variants = {
 };
 
 export default function ProductCarousel({ items }: { items: any[] }) {
+    const pathname = usePathname() || '';
+    const isEnglish = pathname === '/' || pathname.endsWith('-en') || pathname.includes('-en');
+
     if (!items || items.length === 0) return null;
 
     const [[page, direction], setPage] = useState([0, 0]);
@@ -129,7 +133,7 @@ export default function ProductCarousel({ items }: { items: any[] }) {
                                         href={`/${items[imageIndex].slug}`}
                                         className="inline-flex items-center gap-2 bg-(--primary-color) hover:bg-sky-400 text-white px-7 py-4 rounded-xl font-bold uppercase tracking-wider text-[10px] md:text-xs shadow-[0_15px_30px_-5px_color-mix(in_srgb,var(--primary-color)_50%,transparent)] transition-all active:scale-95 w-fit border border-white/10"
                                     >
-                                        Buka Brosur
+                                        {isEnglish ? "Open Brochure" : "Buka Brosur"}
                                         <ArrowRight size={16} strokeWidth={3} />
                                     </Link>
                                 </motion.div>

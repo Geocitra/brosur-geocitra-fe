@@ -23,6 +23,8 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
     const [showCTA, setShowCTA] = useState(false);
     const [containerWidth, setContainerWidth] = useState(800);
     const containerRef = useRef<HTMLDivElement>(null);
+    
+    const isEnglish = filename.toLowerCase().includes('-en');
 
     const { ref: lastPageRef, inView: isLastPageVisible } = useInView({
         threshold: 0.5,
@@ -37,9 +39,9 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
     const returnPath = useMemo(() => {
         const cleanFilename = filename.toLowerCase();
 
-        // KONDISI BARU: Jika file adalah xgreen-dev-academy.pdf, kembalikan ke landing page ("/")
-        if (cleanFilename === 'xgreen-dev-academy.pdf') {
-            return '/';
+        // KONDISI BARU: Jika file adalah xgreen-dev-academy, kembalikan ke landing page (sesuai bahasa)
+        if (cleanFilename.startsWith('xgreen-dev-academy')) {
+            return isEnglish ? '/' : '/id';
         }
 
         // Logika default untuk file lainnya
@@ -110,7 +112,7 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
                         download
                         className="flex items-center gap-2 px-5 md:px-6 py-2.5 rounded-full bg-(--primary-color) text-white font-black text-[10px] md:text-xs uppercase tracking-[0.2em] hover:brightness-110 active:scale-95 transition-all shadow-[0_0_20px_-5px_var(--primary-color)]"
                     >
-                        <Download size={16} /> <span className="hidden md:inline">Unduh Arsip</span><span className="md:hidden">Unduh</span>
+                        <Download size={16} /> <span className="hidden md:inline">{isEnglish ? "Download Archive" : "Unduh Arsip"}</span><span className="md:hidden">{isEnglish ? "Download" : "Unduh"}</span>
                     </a>
                 </div>
             </header>
@@ -123,7 +125,7 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
                         loading={
                             <div className="h-[60vh] w-full flex flex-col items-center justify-center text-(--primary-color) animate-pulse gap-4">
                                 <div className="w-10 h-10 rounded-full border-t-4 border-(--primary-color) animate-spin shadow-[0_0_30px_var(--primary-color)]" />
-                                <span className="font-bold tracking-[0.3em] text-xs uppercase text-slate-400">Memuat Dokumen...</span>
+                                <span className="font-bold tracking-[0.3em] text-xs uppercase text-slate-400">{isEnglish ? "Loading Document..." : "Memuat Dokumen..."}</span>
                             </div>
                         }
                     >
@@ -170,17 +172,17 @@ export default function PDFViewer({ filename }: PDFViewerProps) {
                                     <Sparkles size={24} className="text-white" />
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-black text-white tracking-tighter mb-2 leading-tight">
-                                    Eksplorasi Ekosistem Digital Kami.
+                                    {isEnglish ? "Explore Our Digital Ecosystem." : "Eksplorasi Ekosistem Digital Kami."}
                                 </h3>
                                 <p className="text-slate-400 text-xs md:text-sm mb-6 font-medium leading-relaxed">
-                                    Brosur telah selesai diulas. Ingin melihat detail teknis lebih lanjut?
+                                    {isEnglish ? "Brochure review completed. Want to see more technical details?" : "Brosur telah selesai diulas. Ingin melihat detail teknis lebih lanjut?"}
                                 </p>
                                 <div className="flex gap-3">
                                     <button onClick={() => setShowCTA(false)} className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-[10px] uppercase tracking-[0.2em] transition-colors">
-                                        Tutup
+                                        {isEnglish ? "Close" : "Tutup"}
                                     </button>
                                     <button onClick={handleNavigateBack} className="flex-1 bg-white text-slate-950 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-slate-200 active:scale-95 transition-all shadow-lg">
-                                        Kembali ke Web <ArrowLeft size={16} className="rotate-135" />
+                                        {isEnglish ? "Back to Web" : "Kembali ke Web"} <ArrowLeft size={16} className="rotate-135" />
                                     </button>
                                 </div>
                             </div>

@@ -11,17 +11,18 @@ export default function AcademyBlock() {
     const [isContactOpen, setIsContactOpen] = useState(false);
 
     const pathname = usePathname() || '';
-    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+    const isIndonesian = pathname === '/id' || pathname.startsWith('/id/');
+    const isEnglish = !isIndonesian;
 
     // 2. Kamus Translasi untuk Konten Statis
     const t = {
         badge: "XGreen Dev Academy",
-        titlePrefix: isEnglish ? "Learning by" : "Learning by",
-        titleHighlight: isEnglish ? "Building Real Apps." : "Building Real Apps.",
+        titlePrefix: isEnglish ? "Learning by" : "Belajar dengan",
+        titleHighlight: isEnglish ? "Building Real Apps." : "Membangun Aplikasi Nyata.",
         description: isEnglish
             ? "Bridging the competency gap between graduates and industry standards. We produce work-ready IT talent through hands-on practical training, not just theory."
             : "Menjembatani kesenjangan kompetensi lulusan dengan standar industri. Kami mencetak talenta IT siap kerja melalui pelatihan berbasis praktik langsung, bukan sekadar teori.",
-        btnPdf: isEnglish ? "View PDF" : "Lihat Pdf",
+        btnPdf: isEnglish ? "View PDF" : "Lihat PDF",
         btnRegister: isEnglish ? "Register Batch Now" : "Daftar Batch Sekarang",
         badgeTargetLabel: isEnglish ? "Graduate Target" : "Target Lulusan",
         badgeTargetValue: isEnglish ? "Work-Ready Talent" : "Talenta Siap Kerja",
@@ -33,21 +34,21 @@ export default function AcademyBlock() {
     const academyFeatures = [
         {
             icon: <Target className="w-6 h-6 text-emerald-600" />,
-            title: isEnglish ? "Project-Based Learning" : "Project-Based Learning",
+            title: isEnglish ? "Project-Based Learning" : "Belajar Berbasis Proyek",
             description: isEnglish
                 ? "Learn by building real applications that can be used immediately."
                 : "Belajar dengan membangun aplikasi nyata yang dapat langsung digunakan."
         },
         {
             icon: <Users className="w-6 h-6 text-emerald-600" />,
-            title: isEnglish ? "Industry Mentorship" : "Industry Mentorship",
+            title: isEnglish ? "Industry Mentorship" : "Mentorship Industri",
             description: isEnglish
                 ? "Guided directly by active developers experienced in the industry."
                 : "Dibimbing langsung oleh developer aktif yang berpengalaman di industri."
         },
         {
             icon: <Rocket className="w-6 h-6 text-emerald-600" />,
-            title: isEnglish ? "Outcome-Oriented" : "Outcome-Oriented",
+            title: isEnglish ? "Outcome-Oriented" : "Berorientasi Hasil",
             description: isEnglish
                 ? "Results in the form of ready-to-use applications & digital portfolios."
                 : "Hasil berupa aplikasi & portfolio digital siap pakai."
@@ -135,7 +136,7 @@ export default function AcademyBlock() {
                             className="flex flex-col sm:flex-row gap-5 pt-6"
                         >
                             <a
-                                href="/preview/xgreen-dev-academy.pdf"
+                                href={isEnglish ? "/preview/xgreen-dev-academy-en.pdf" : "/preview/xgreen-dev-academy.pdf"}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-slate-950 text-white rounded-full text-base font-bold shadow-xl shadow-slate-900/20 hover:bg-slate-800 hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto group"

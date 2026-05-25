@@ -8,19 +8,18 @@ export default function LanguageSwitcher() {
     const pathname = usePathname() || '';
     const router = useRouter();
 
-    // Deteksi cerdas: Apakah kita sedang di rute /en
-    const isEnglish = pathname === '/en' || pathname.startsWith('/en/');
+    // Deteksi cerdas: Apakah kita sedang di rute Indonesia (/id)
+    const isIndonesian = pathname === '/id' || pathname.startsWith('/id/');
+    const isEnglish = !isIndonesian;
 
     const toggleLanguage = () => {
         if (isEnglish) {
-            // Jika di bahasa Inggris, pindah ke Indonesia (Root)
-            // Kita replace '/en' dengan string kosong untuk kembali ke root
-            const newPath = pathname.replace('/en', '') || '/';
+            // Jika di bahasa Inggris, pindah ke Indonesia (/id)
+            const newPath = pathname === '/' ? '/id' : `/id${pathname}`;
             router.push(newPath);
         } else {
-            // Jika di Indonesia, pindah ke bahasa Inggris
-            // Kita sisipkan '/en' di awal URL
-            const newPath = `/en${pathname === '/' ? '' : pathname}`;
+            // Jika di Indonesia, pindah ke bahasa Inggris (Root)
+            const newPath = pathname.replace(/^\/id/, '') || '/';
             router.push(newPath);
         }
     };

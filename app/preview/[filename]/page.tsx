@@ -9,8 +9,9 @@ const DynamicPDFViewer = dynamic(() => import('@/app/components/PDFViewer'), {
     loading: () => (
         <main className="min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-4">
             <div className="w-12 h-12 rounded-full border-t-4 border-[#0ea5e9] animate-spin shadow-[0_0_30px_#0ea5e9]" />
-            <span className="font-bold tracking-[0.3em] text-xs uppercase text-slate-400 animate-pulse">
-                Menyiapkan Lingkungan...
+            <span className="font-bold tracking-[0.3em] text-xs uppercase text-slate-400 animate-pulse text-center">
+                Preparing Environment...<br />
+                <span className="text-[10px] text-slate-500">Menyiapkan Lingkungan...</span>
             </span>
         </main>
     ),

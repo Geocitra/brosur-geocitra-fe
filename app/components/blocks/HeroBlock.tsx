@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight, ExternalLink } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
 // 1. Definisi antarmuka kontrak data yang ketat (Strict Interface)
 interface HeroData {
@@ -22,6 +22,10 @@ interface HeroBlockProps {
 export default function HeroBlock({ data }: HeroBlockProps) {
     // 2. Inisialisasi Router untuk navigasi Next.js
     const router = useRouter();
+    const params = useParams();
+
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
 
     // Variabel Animasi Stagger (Muncul Berurutan)
     const containerVariants = {
@@ -46,7 +50,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
 
     // 3. Ekstraksi Data Aman (Defensive Assignment)
     const targetUrl = data.fileUrl || '';
-    const ctaText = data.buttonText || 'Lihat Presentasi';
+    const ctaText = data.buttonText || (isEnglish ? 'View Presentation' : 'Lihat Presentasi');
     const demoUrl = data.demoUrl || '';
     const demoCtaText = data.demoButtonText || 'Live Demo';
 
@@ -94,7 +98,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                                 style={{ color: 'var(--primary-color)' }}
                             >
                                 <span className="w-2 h-2 rounded-full mr-2 animate-pulse" style={{ backgroundColor: 'var(--primary-color)' }} />
-                                Ekosistem Geocitra
+                                {isEnglish ? "Geocitra Ecosystem" : "Ekosistem Geocitra"}
                             </span>
                         </motion.div>
 
@@ -130,7 +134,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
                                 </button>
                             ) : (
                                 <button
-                                    onClick={() => alert("Dokumen brosur belum tersedia untuk produk ini.")}
+                                    onClick={() => alert(isEnglish ? "Brochure document is not available for this product yet." : "Dokumen brosur belum tersedia untuk produk ini.")}
                                     className="group relative flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-white transition-all duration-300 opacity-50 cursor-not-allowed"
                                     style={{ backgroundColor: 'var(--primary-color)' }}
                                 >

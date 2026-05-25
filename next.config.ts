@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
     // 100 opsional jika nanti ada gambar hero/banner yang butuh ketajaman absolut
     qualities: [75, 90, 100],
   },
+
+  async redirects() {
+    return [
+      {
+        source: '/en',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

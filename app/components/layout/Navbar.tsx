@@ -21,7 +21,7 @@ export default function Navbar({ appName }: { appName: string }) {
     const baseSlug = isEnglish ? slug.replace('-en', '') : slug;
 
     // [INTELLIGENCE INJECTION] Tentukan URL Dashboard berdasarkan bahasa
-    const dashboardUrl = isEnglish ? '/en' : '/';
+    const dashboardUrl = isEnglish ? '/' : '/id';
 
     // 2. Handler Perpindahan Bahasa
     const handleLanguageSwitch = (targetLang: 'id' | 'en') => {
@@ -109,7 +109,7 @@ export default function Navbar({ appName }: { appName: string }) {
                                 className="text-slate-400 group-hover:text-slate-900 shrink-0"
                             />
                             <span className="text-sm font-medium text-slate-500 hidden sm:inline-block">
-                                Cari...
+                                {isEnglish ? "Search..." : "Cari..."}
                             </span>
                             <div className="hidden lg:flex items-center gap-1 ml-2">
                                 <kbd className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] font-bold text-slate-400">⌘K</kbd>

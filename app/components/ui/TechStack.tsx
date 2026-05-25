@@ -180,7 +180,8 @@ const TechCategoryCard = ({ category, index, coreTechLabel, isWide }: { category
 // --- MAIN COMPONENT ---
 export default function TechStack() {
     const pathname = usePathname() || '';
-    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+    const isEnglish = pathname === '/' || pathname.endsWith('-en') || pathname.includes('-en');
+    const isIndonesian = !isEnglish;
 
     const t = {
         badge: isEnglish ? "OUR EXPERTISE" : "KEAHLIAN KAMI",

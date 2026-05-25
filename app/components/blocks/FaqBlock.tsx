@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, MessageCircleQuestion } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
+import { useParams } from 'next/navigation';
 
 // 1. Definisi Kontrak Data (Strict Interface)
 interface FaqItem {
@@ -22,6 +23,17 @@ interface FaqBlockProps {
 
 export default function FaqBlock({ data }: FaqBlockProps) {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const params = useParams();
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
+
+    const t = {
+        badge: isEnglish ? "Help Center" : "Pusat Bantuan",
+        defaultTitle: isEnglish ? "Frequently Asked Questions" : "Pertanyaan Umum",
+        subtitle: isEnglish
+            ? "Find quick answers to the most frequently asked questions about our systems, implementation, and services."
+            : "Temukan jawaban cepat untuk pertanyaan yang paling sering diajukan mengenai sistem, implementasi, dan layanan kami."
+    };
 
     // Defensive rendering jika tidak ada item FAQ
     if (!data?.items || data.items.length === 0) return null;
@@ -46,18 +58,18 @@ export default function FaqBlock({ data }: FaqBlockProps) {
                             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-5 sm:mb-6">
                                 <MessageCircleQuestion className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: 'var(--primary-color)' }} />
                                 <span className="text-[10px] sm:text-xs font-bold text-slate-700 uppercase tracking-widest">
-                                    Pusat Bantuan
+                                    {t.badge}
                                 </span>
                             </div>
 
                             {/* Main Headline - Tipografi dinamis */}
                             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tighter mb-4 sm:mb-6 leading-[1.15]">
-                                {data.title || 'Pertanyaan Umum'}
+                                {data.title || t.defaultTitle}
                             </h2>
 
                             {/* Copywriting Pendukung */}
                             <p className="text-slate-600 text-base sm:text-lg font-medium leading-relaxed mb-6 sm:mb-8 max-w-md">
-                                Temukan jawaban cepat untuk pertanyaan yang paling sering diajukan mengenai sistem, implementasi, dan layanan kami.
+                                {t.subtitle}
                             </p>
 
                             {/* Dekorasi Visual: Kotak aksen warna primer untuk menegaskan identitas */}

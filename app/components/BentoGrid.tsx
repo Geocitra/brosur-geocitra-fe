@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 export default function BentoGrid({ items }: { items: any[] }) {
     const pathname = usePathname() || '';
-    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+    const isEnglish = pathname === '/' || pathname.endsWith('-en') || pathname.includes('-en');
 
     const t = {
         emptyTitle: isEnglish ? "Empty Showcase" : "Etalase Kosong",

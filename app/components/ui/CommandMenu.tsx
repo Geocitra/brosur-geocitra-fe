@@ -24,7 +24,7 @@ export default function CommandMenu({
     const isEnglish = slug.endsWith('-en');
 
     // [INTELLIGENCE INJECTION] Tentukan URL Dashboard berdasarkan bahasa
-    const dashboardUrl = isEnglish ? '/en' : '/';
+    const dashboardUrl = isEnglish ? '/' : '/id';
 
     // 2. Kamus Translasi (Dictionary)
     const t = {

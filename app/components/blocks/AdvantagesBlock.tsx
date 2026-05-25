@@ -22,9 +22,9 @@ interface AdvantagesBlockProps {
 }
 
 export default function AdvantagesBlock({ data }: AdvantagesBlockProps) {
-    // Deteksi Bahasa Dinamis
     const pathname = usePathname() || '';
-    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+    const isEnglish = pathname === '/' || pathname.endsWith('-en') || pathname.includes('-en');
+    const isIndonesian = !isEnglish;
 
     // Kamus Translasi Fallback
     const t = {

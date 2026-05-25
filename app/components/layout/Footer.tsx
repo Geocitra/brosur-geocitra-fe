@@ -9,9 +9,10 @@ export default function Footer() {
     const pathname = usePathname() || '';
 
     // Logika Pintar:
-    // - pathname === '/en' -> Menangkap halaman utama dashboard bahasa Inggris
+    // - pathname === '/' -> Menangkap halaman utama dashboard bahasa Inggris
     // - pathname.endsWith('-en') -> Menangkap halaman brosur bahasa Inggris (misal: /rekas-en)
-    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+    const isEnglish = pathname === '/' || pathname.endsWith('-en') || pathname.includes('-en');
+    const isIndonesian = !isEnglish;
 
     // 2. Kamus Translasi (Dictionary)
     const t = {

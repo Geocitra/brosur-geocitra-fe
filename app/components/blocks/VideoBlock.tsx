@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
+import { useParams } from 'next/navigation';
 
 interface VideoData {
     title?: string;
@@ -13,6 +14,10 @@ interface VideoBlockProps {
 }
 
 export default function VideoBlock({ data }: VideoBlockProps) {
+    const params = useParams();
+    const slug = typeof params?.slug === 'string' ? params.slug : '';
+    const isEnglish = slug.endsWith('-en');
+
     if (!data.videoUrl) return null;
 
     return (
@@ -39,7 +44,7 @@ export default function VideoBlock({ data }: VideoBlockProps) {
                         transition={{ duration: 0.6 }}
                     >
                         <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter">
-                            {data.title || "Alur Kerja Digital"}
+                            {data.title || (isEnglish ? "Digital Workflow" : "Alur Kerja Digital")}
                         </h2>
                     </motion.div>
 

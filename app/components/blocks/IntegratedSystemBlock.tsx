@@ -5,9 +5,9 @@ import { CreditCard, Video, Sparkles, Server } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export default function IntegratedSystemBlock() {
-    // 1. Logika Deteksi Bahasa
     const pathname = usePathname() || '';
-    const isEnglish = pathname === '/en' || pathname.endsWith('-en');
+    const isEnglish = pathname === '/' || pathname.endsWith('-en') || pathname.includes('-en');
+    const isIndonesian = !isEnglish;
 
     // 2. Kamus Translasi Konten Statis
     const t = {
